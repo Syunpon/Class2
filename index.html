@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <script type="text/javascript">
+  var d = document;
+  var link = d.createElement('link');
+  var link_min = d.createElement('link');
+  var dark_mode_cookie;
+  var r = document.cookie.split(";");
+  r.forEach(function(value) {
+    var content = value.split("=");
+    if(content[0] == "dark_mode") {
+      dark_mode_cookie = content[1];
+    }
+  });
+  var href = "https://unpkg.com/onsenui/css/";
+  if (dark_mode_cookie == "true") {
+    href += "dark-";
+  }
+  link.rel = 'stylesheet';
+  link.type = 'text/css';
+  link_min.rel = 'stylesheet';
+  link_min.type = 'text/css';
+  //link.href = href + "onsenui.css";
+  link_min.href = href + "onsen-css-components.min.css";
+  var h = d.getElementsByTagName('head')[0];
+  h.appendChild(link);
+  h.appendChild(link_min);
+  </script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-127299414-1"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-127299414-1');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon-precomposed" href="https://syunpon.github.io/site_images/2-h_.png" />
+  <title>2-H</title>
+
+  <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+</head>
+
+<body>
+  <ons-splitter>
+    <ons-splitter-side id="menu" side="left" width="220px" collapse swipeable>
+      <ons-page>
+        <ons-list>
+          <ons-list-item onclick="fn.load('home.html')" tappable>
+            ホーム
+          </ons-list-item>
+          <ons-list-item onclick="fn.load('settings.html')" tappable>
+            設定
+          </ons-list-item>
+        </ons-list>
+      </ons-page>
+    </ons-splitter-side>
+
+    <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
+  </ons-splitter>
+
+  <script type="text/javascript">
+  window.fn = {};
+  window.fn.open = function() {
+    var menu = document.getElementById('menu');
+    menu.open();
+  };
+
+  window.fn.load = function(page) {
+    var content = document.getElementById('content');
+    var menu = document.getElementById('menu');
+    content.load(page).then(menu.close.bind(menu));
+  };
+  </script>
+
+  <template id="home.html">
+
+    <ons-page id="main">
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="md-menu"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center">2-H</div>
+      </ons-toolbar>
+
+      <script type="text/javascript">
+      function getData(name, url, get_type) {
+        var xmlhttp = new XMLHttpRequest();
+        var output = "";
+
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4) {
+            current_div.innerHTML = "";
+
+            if (xmlhttp.status == 200) {
+              text = RemoveCR(xmlhttp.responseText.split("\n"));
+              //console.log(text);
+
+              output = "<ul class=\"list\">";
+
+              for (var i = 0; i < text.length; i++) {
+                var text2 = text[i].split(",");
+
+                switch (get_type) {
+                  case 0: //小テスト範囲
+                  output += "<li class=\"list-item\"><div class=\"list-item__center\">" + text2[0] + "</div><div class=\"list-item__right\"><div class=\"list-item__label\">" + text2[1] + "</div></div></li>";
+                  break;
+
+                  case 1: //英語
+                  var label1;
+                  var label2;
+
+                  if (i > 0) {
+                    output += "<ons-list-item expandable>" + text2[0] + "<div class=\"expandable-content\">" + label1 + " : " + text2[1] + "<br>" + label2 + " : " + text2[2] + "</div></ons-list-item>";
+                  }else {
+                    label1 = text2[1];
+                    label2 = text2[2];
+                  }
+                  break;
+
+                  case 2: //イベント
+                  output += "<ons-list-item";
+                  if (text2[1] != "") output += " expandable";
+                  output += ">" +text2[0];
+                  if (text2[1] != "") output += "<div class=\"expandable-content\">" + text2[1] + "</div>";
+                  output += "</ons-list-item>";
+                  break;
+                }
+              }
+
+              output += "</ul>";
+
+              console.log(output);
+              current_div.innerHTML = output;
+              console.log("end : " + name);
+              init2();
+            } else {
+              current_div_parent.innerHTML = "取得できませんでした。";
+              init2();
+            }
+          }
+        }
+
+        //document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
+        var current_div_parent = document.getElementById(name + "_parent");
+        //current_div_parent.innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
+        var current_div = document.getElementById(name);
+        //current_div.innerHTML += "<ul class=\"list\"><li class=\"list-item\"><div class=\"list-item__right\"><ons-progress-circular indeterminate></ons-progress-circular></div></li></ul>";
+        console.log("init : " + name);
+        xmlhttp.open("GET", url);
+        xmlhttp.send();
+      }
+
+      var count = -1;
+      var text_;
+
+      function init(url_) {
+        var xmlhttp_ = new XMLHttpRequest();
+        xmlhttp_.onreadystatechange = function() {
+          if (xmlhttp_.readyState == 4) {
+            if (xmlhttp_.status == 200) {
+              text_ = xmlhttp_.responseText.split("\n");
+              for (var i = 0; i < text_.length; i++) {
+                var text2 = text_[i].split(",");
+
+                var name = text2[0];
+                document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
+                document.getElementById(name + "_parent").innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
+                document.getElementById(name).innerHTML += "<ul class=\"list\"><li class=\"list-item\"><div class=\"list-item__right\"><ons-progress-circular indeterminate></ons-progress-circular></div></li></ul>";
+                console.log("init : " + name);
+              }
+              init2();
+            } else {
+              document.getElementById("main_content").innerHTML = "取得できませんでした。";
+            }
+          }
+        }
+        xmlhttp_.open("GET", url_);
+        xmlhttp_.send();
+      }
+
+      function init2() {
+        count++;
+        //for (var i = 0; i < text.length; i++) {
+        if (count < text_.length) {
+          var text2 = text_[count].split(",");
+
+          var name = text2[0];
+          var get_type = Number(text2[1]);
+          var url = text2[2];
+          console.log("name=" + name + "; url=" + url + "; get_type=" + get_type);
+          getData(name, url, get_type);
+        }
+      }
+
+      function RemoveCR(str) {
+        if (str !== undefined){
+          var result = str.replace('\r', "");
+          //「str」と「result」が同じ文字列になるまで繰り返す
+          while(result !== str) {
+            str = str.replace('\r', '');
+            result = result.replace('\r', "");
+          }
+          return result;
+        }
+      }
+
+      init("https://docs.google.com/spreadsheets/d/e/2PACX-1vQe-RiFyp3huUW2Efp_ajX6FaGDjOuR6sk88q-SlP0FJ2_UqG8Yf9ALUlca5uHQrJ2Y7taQT2esOnIa/pub?output=csv");
+      </script>
+
+      <div class="content" id="main_content">
+
+        <div id="Birthday_parent"></div>
+
+        <script type="text/javascript">
+        var xmlhttp5 = new XMLHttpRequest();
+        var birth_text = "";
+
+        xmlhttp5.onreadystatechange = function() {
+          if (xmlhttp5.readyState == 4) {
+            if (xmlhttp5.status == 200) {
+              birth_text = xmlhttp5.responseText.split("\n");
+              CheckBirthday();
+            }
+          }
+        }
+
+        xmlhttp5.open("GET", "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpVZ_6TTbmr47W9dQdwDQKuWYN2OlKw1AIDgloPmSM7qbY2oCYsKM9xOtCC-NPmDMWzIIqjbw50mV0/pub?output=csv");
+        xmlhttp5.send();
+
+        function CheckBirthday() {
+          var nowDate = new Date();
+          var month_now = nowDate.getMonth() + 1;
+          var day_now = nowDate.getDate();
+
+          var tomorrowDate = new Date();
+          tomorrowDate.setDate( tomorrowDate.getDate() + 1);
+          var month_tomorrow = tomorrowDate.getMonth() + 1;
+          var day_tomorrow = tomorrowDate.getDate();
+
+          var match_count = 0;
+          var match_count2 = 0;
+
+          for (var i = 0; i < birth_text.length; i++) {
+            var birth_text_1 = birth_text[i].split(",");
+            var month = parseInt(birth_text_1[0]);
+            var day = parseInt(birth_text_1[1]);
+            if (month == month_now && day == day_now) match_count++;
+          }
+
+          for (var i = 0; i < birth_text.length; i++) {
+            var birth_text_1 = birth_text[i].split(",");
+            var month = parseInt(birth_text_1[0]);
+            var day = parseInt(birth_text_1[1]);
+            if (month == month_tomorrow && day == day_tomorrow) match_count2++;
+          }
+
+          if (match_count > 0) {
+            var output_birthday = "";
+            output_birthday = "<ons-card><div class=\"title\" id=\"Birthday\"></div>";
+            if (match_count2 > 0) output_birthday += "<div class=\"content\" id=\"Birthday2\"></div>";
+            output_birthday += "</ons-card>";
+
+            document.getElementById("Birthday_parent").innerHTML = output_birthday;
+
+            document.getElementById("Birthday").innerHTML = "今日誕生日を迎える人が" + match_count + "人います🎉";
+            if (match_count2 > 0) document.getElementById("Birthday2").innerHTML = "明日誕生日を迎える人が" + match_count2 + "人います🎉";
+          }else {
+            if (match_count2 > 0) {
+              document.getElementById("Birthday_parent").innerHTML = "<ons-card><div class=\"content\" id=\"Birthday2\"></div></ons-card>";
+              document.getElementById("Birthday2").innerHTML = "明日誕生日を迎える人が" + match_count2 + "人います";
+            }else {
+              document.getElementById("Birthday_parent").innerHTML = "";
+            }
+          }
+          setTimeout("CheckBirthday()", 1000);
+        }
+        </script>
+
+        <ons-card>
+          <div class="title">試験まで</div>
+          <div id="countdown"></div>
+          <script type="text/javascript">
+          function main() {
+            var now = new Date();
+            var test_date = new Date( 2018, 10, 19, 0, 0 );
+            var day = (test_date.getTime() - now.getTime()) / 1000 / 60 / 60 / 24;
+            var hour = (test_date.getTime() - now.getTime() - Math.floor(day) * 1000 * 60 * 60 *24) / 1000 / 60 / 60;
+            document.getElementById("countdown").innerHTML = "";
+            if (Math.floor(day) > 0) document.getElementById("countdown").innerHTML += "残り" + Math.floor(day) + "日";
+            if (Math.floor(hour) > 0) document.getElementById("countdown").innerHTML += Math.floor(hour) + "時間";
+            setTimeout("main()", 1000);
+          }
+          main();
+          </script>
+        </ons-card>
+
+      </div>
+
+
+
+    </ons-page>
+  </template>
+
+  <template id="settings.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="md-menu"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center">
+          設定
+        </div>
+      </ons-toolbar>
+
+      <ons-card>
+        <div class="content">
+          <ons-list>
+            <ons-list-item>
+              <div class="center">
+                ダークモード
+              </div>
+              <div class="right">
+                <ons-switch id="dark_toggle"></ons-switch>
+              </div>
+            </ons-list-item>
+          </ons-list>
+        </div>
+      </ons-card>
+
+      <script type="text/javascript">
+      function SetDarkToggle() {
+        var dark_mode_cookie;
+        var r = document.cookie.split(";");
+        r.forEach(function(value) {
+          var content = value.split("=");
+          if(content[0] == "dark_mode") {
+            dark_mode_cookie = content[1];
+          }
+        });
+        if (dark_mode_cookie == "true") {
+          document.getElementById("dark_toggle").setAttribute('checked', 'true');
+        }
+      }
+
+      document.getElementById("dark_toggle").addEventListener('change', function() {
+        var nowDate2 = new Date();
+        var date_end;
+        if (nowDate2.getMonth() <= 2) {
+          date_end = new Date(nowDate2.getFullYear(), 2, 31, 0, 0);
+        }else {
+          date_end = new Date(nowDate2.getFullYear() + 1, 2, 31, 0, 0);
+        }
+        if (document.getElementById("dark_toggle").checked) {
+          document.cookie = "dark_mode=true;expires=" + date_end.toGMTString();
+        }else {
+          document.cookie = "dark_mode=false;expires=" + date_end.toGMTString();
+        }
+        //ChangeTheme();
+        location.reload(true);
+      });
+
+      SetDarkToggle();
+      </script>
+    </ons-page>
+  </template>
+
+</body>
+</html>

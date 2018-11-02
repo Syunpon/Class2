@@ -99,6 +99,7 @@
 
         xmlhttp.onreadystatechange = function() {
           if (xmlhttp.readyState == 4) {
+            console.log(name);
             current_div.innerHTML = "";
 
             if (xmlhttp.status == 200) {

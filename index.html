@@ -321,7 +321,7 @@
               if (xmlhttp.status == 200) {
                 var text = xmlhttp.responseText.split("\n");
                 for (var i = 0; i < text.length; i++) {
-                  var text2 = text_[i].split(",");
+                  var text2 = text[i].split(",");
                   if (Number(text2[0]) == class_id) {
                     class_displayname = text2[2];
                     class_status = Number(text2[3]);

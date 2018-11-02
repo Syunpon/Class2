@@ -102,7 +102,7 @@
             current_div.innerHTML = "";
 
             if (xmlhttp.status == 200) {
-              text = RemoveCR(xmlhttp.responseText.split("\n"));
+              text = RemoveCR(xmlhttp.responseText).split("\n");
               //console.log(text);
 
               output = "<ul class=\"list\">";

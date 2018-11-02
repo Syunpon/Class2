@@ -28,7 +28,7 @@
   h.appendChild(link);
   h.appendChild(link_min);
   </script>
-
+  
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-127299414-1"></script>
   <script>
@@ -37,13 +37,13 @@
   gtag('js', new Date());
   gtag('config', 'UA-127299414-1');
   </script>
-
+  
   <meta charset="utf-8">
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <link rel="apple-touch-icon-precomposed" href="https://syunpon.github.io/site_images/2-h_.png" />
-  <title>2-H</title>
-
+  <!--<link rel="apple-touch-icon-precomposed" href="https://syunpon.github.io/site_images/2-h_.png" />-->
+  <title>Class</title>
+  
   <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
 </head>
@@ -62,26 +62,26 @@
         </ons-list>
       </ons-page>
     </ons-splitter-side>
-
+    
     <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
   </ons-splitter>
-
+  
   <script type="text/javascript">
   window.fn = {};
   window.fn.open = function() {
     var menu = document.getElementById('menu');
     menu.open();
   };
-
+  
   window.fn.load = function(page) {
     var content = document.getElementById('content');
     var menu = document.getElementById('menu');
     content.load(page).then(menu.close.bind(menu));
   };
   </script>
-
+  
   <template id="home.html">
-
+    
     <ons-page id="main">
       <ons-toolbar>
         <div class="left">
@@ -89,37 +89,37 @@
             <ons-icon icon="md-menu"></ons-icon>
           </ons-toolbar-button>
         </div>
-        <div class="center">2-H</div>
+        <div class="center" id="class_displayname"></div>
       </ons-toolbar>
-
+      
       <script type="text/javascript">
       function getData(name, url, get_type) {
         var xmlhttp = new XMLHttpRequest();
         var output = "";
-
+        
         xmlhttp.onreadystatechange = function() {
           if (xmlhttp.readyState == 4) {
             console.log(name);
             current_div.innerHTML = "";
-
+            
             if (xmlhttp.status == 200) {
               text = RemoveCR(xmlhttp.responseText).split("\n");
               //console.log(text);
-
+              
               output = "<ul class=\"list\">";
-
+              
               for (var i = 0; i < text.length; i++) {
                 var text2 = text[i].split(",");
-
+                
                 switch (get_type) {
                   case 0: //小テスト範囲
                   output += "<li class=\"list-item\"><div class=\"list-item__center\">" + text2[0] + "</div><div class=\"list-item__right\"><div class=\"list-item__label\">" + text2[1] + "</div></div></li>";
                   break;
-
+                  
                   case 1: //英語
                   var label1;
                   var label2;
-
+                  
                   if (i > 0) {
                     output += "<ons-list-item expandable>" + text2[0] + "<div class=\"expandable-content\">" + label1 + " : " + text2[1] + "<br>" + label2 + " : " + text2[2] + "</div></ons-list-item>";
                   }else {
@@ -127,7 +127,7 @@
                     label2 = text2[2];
                   }
                   break;
-
+                  
                   case 2: //イベント
                   output += "<ons-list-item";
                   if (text2[1] != "") output += " expandable";
@@ -137,9 +137,9 @@
                   break;
                 }
               }
-
+              
               output += "</ul>";
-
+              
               console.log(output);
               current_div.innerHTML = output;
               console.log("end : " + name);
@@ -150,7 +150,7 @@
             }
           }
         }
-
+        
         //document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
         var current_div_parent = document.getElementById(name + "_parent");
         //current_div_parent.innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
@@ -160,46 +160,50 @@
         xmlhttp.open("GET", url);
         xmlhttp.send();
       }
-
+      
       var count = -1;
       var text_;
-
+      
       function init(url_) {
-        var xmlhttp_ = new XMLHttpRequest();
-        xmlhttp_.onreadystatechange = function() {
-          if (xmlhttp_.readyState == 4) {
-            if (xmlhttp_.status == 200) {
-              text_ = xmlhttp_.responseText.split("\n");
-              for (var i = 0; i < text_.length; i++) {
-                var text2 = text_[i].split(",");
-
-                var name = text2[0];
-                var get_type = Number(text2[1]);
-                //var url = text2[2];
-
-                if (get_type != 3) {
-                  document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
-                  document.getElementById(name + "_parent").innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
-                  document.getElementById(name).innerHTML += "<ul class=\"list\"><li class=\"list-item\"><div class=\"list-item__right\"><ons-progress-circular indeterminate></ons-progress-circular></div></li></ul>";
-                  console.log("init : " + name);
+        document.getElementById("class_displayname").innerHTML = class_displayname;
+        
+        if (class_status == 0) {
+          var xmlhttp_ = new XMLHttpRequest();
+          xmlhttp_.onreadystatechange = function() {
+            if (xmlhttp_.readyState == 4) {
+              if (xmlhttp_.status == 200) {
+                text_ = xmlhttp_.responseText.split("\n");
+                for (var i = 0; i < text_.length; i++) {
+                  var text2 = text_[i].split(",");
+                  
+                  var name = text2[0];
+                  var get_type = Number(text2[1]);
+                  //var url = text2[2];
+                  
+                  if (get_type != 3) {
+                    document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
+                    document.getElementById(name + "_parent").innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
+                    document.getElementById(name).innerHTML += "<ul class=\"list\"><li class=\"list-item\"><div class=\"list-item__right\"><ons-progress-circular indeterminate></ons-progress-circular></div></li></ul>";
+                    console.log("init : " + name);
+                  }
                 }
+                init2();
+              } else {
+                document.getElementById("main_content").innerHTML = "取得できませんでした。";
               }
-              init2();
-            } else {
-              document.getElementById("main_content").innerHTML = "取得できませんでした。";
             }
           }
+          xmlhttp_.open("GET", url_);
+          xmlhttp_.send();
         }
-        xmlhttp_.open("GET", url_);
-        xmlhttp_.send();
       }
-
+      
       function init2() {
         count++;
         //for (var i = 0; i < text.length; i++) {
         if (count < text_.length) {
           var text2 = text_[count].split(",");
-
+          
           var name = text2[0];
           var get_type = Number(text2[1]);
           var url = text2[2];
@@ -212,7 +216,7 @@
           }
         }
       }
-
+      
       function RemoveCR(str) {
         if (str !== undefined){
           var result = str.replace('\r', "");
@@ -224,42 +228,42 @@
           return result;
         }
       }
-
+      
       function CheckBirthday() {
         var nowDate = new Date();
         var month_now = nowDate.getMonth() + 1;
         var day_now = nowDate.getDate();
-
+        
         var tomorrowDate = new Date();
         tomorrowDate.setDate( tomorrowDate.getDate() + 1);
         var month_tomorrow = tomorrowDate.getMonth() + 1;
         var day_tomorrow = tomorrowDate.getDate();
-
+        
         var match_count = 0;
         var match_count2 = 0;
-
+        
         for (var i = 0; i < birth_text.length; i++) {
           var birth_text_1 = birth_text[i].split(",");
           var month = parseInt(birth_text_1[0]);
           var day = parseInt(birth_text_1[1]);
           if (month == month_now && day == day_now) match_count++;
         }
-
+        
         for (var i = 0; i < birth_text.length; i++) {
           var birth_text_1 = birth_text[i].split(",");
           var month = parseInt(birth_text_1[0]);
           var day = parseInt(birth_text_1[1]);
           if (month == month_tomorrow && day == day_tomorrow) match_count2++;
         }
-
+        
         if (match_count > 0) {
           var output_birthday = "";
           output_birthday = "<ons-card><div class=\"title\" id=\"Birthday\"></div>";
           if (match_count2 > 0) output_birthday += "<div class=\"content\" id=\"Birthday2\"></div>";
           output_birthday += "</ons-card>";
-
+          
           document.getElementById("Birthday_parent").innerHTML = output_birthday;
-
+          
           document.getElementById("Birthday").innerHTML = "今日誕生日を迎える人が" + match_count + "人います🎉";
           if (match_count2 > 0) document.getElementById("Birthday2").innerHTML = "明日誕生日を迎える人が" + match_count2 + "人います🎉";
         }else {
@@ -272,10 +276,10 @@
         }
         setTimeout("CheckBirthday()", 1000);
       }
-
+      
       var xmlhttp5 = new XMLHttpRequest();
       var birth_text = "";
-
+      
       function GetBirthday(url_2) {
         xmlhttp5.onreadystatechange = function() {
           if (xmlhttp5.readyState == 4) {
@@ -285,26 +289,73 @@
             }
           }
         }
-
+        
         xmlhttp5.open("GET", url_2);
         xmlhttp5.send();
       }
-
-
-      init("https://docs.google.com/spreadsheets/d/e/2PACX-1vQe-RiFyp3huUW2Efp_ajX6FaGDjOuR6sk88q-SlP0FJ2_UqG8Yf9ALUlca5uHQrJ2Y7taQT2esOnIa/pub?output=csv");
+      
+      var class_displayname;
+      var class_status;
+      var class_url;
+      
+      function GetClassData() {
+        var r = document.cookie.split(";");
+        var class_id_cookie;
+        var class_id;
+        
+        r.forEach(function(value) {
+          var content = value.split("=");
+          if(content[0] == "class_id") {
+            dark_mode_cookie = content[1];
+          }
+        });
+        
+        class_id_cookie = "720208";
+        
+        if (class_id_cookie != "") {
+          class_id = Number(class_id_cookie);
+          
+          var xmlhttp = new XMLHttpRequest();
+          xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4) {
+              if (xmlhttp.status == 200) {
+                var text = xmlhttp.responseText.split("\n");
+                for (var i = 0; i < text_.length; i++) {
+                  var text2 = text_[i].split(",");
+                  if (Number(text2[0]) == class_id) {
+                    class_displayname = text2[2];
+                    class_status = Number(text2[3]);
+                    class_url = text2[4];
+                    init(url);
+                    break;
+                  }
+                }
+              } else {
+                document.getElementById("main_content").innerHTML = "取得できませんでした。";
+              }
+            }
+          }
+          xmlhttp.open("GET", "https://docs.google.com/spreadsheets/d/e/2PACX-1vRENc8J2soUNi617DtRGZpBJsY9KZwy_5I-kjkLwehxDqL8Q8Jb3sW9T5RdiMSpWniPI_0aUKrQBAT1/pub?output=csv");
+          xmlhttp.send();
+        }
+      }
+      
+      GetClassData();
+      
+      //init("https://docs.google.com/spreadsheets/d/e/2PACX-1vQe-RiFyp3huUW2Efp_ajX6FaGDjOuR6sk88q-SlP0FJ2_UqG8Yf9ALUlca5uHQrJ2Y7taQT2esOnIa/pub?output=csv");
       //GetBirthday("https://docs.google.com/spreadsheets/d/e/2PACX-1vRpVZ_6TTbmr47W9dQdwDQKuWYN2OlKw1AIDgloPmSM7qbY2oCYsKM9xOtCC-NPmDMWzIIqjbw50mV0/pub?output=csv");
-
-
+      
+      
       </script>
-
+      
       <div class="content" id="main_content">
-
+        
         <div id="Birthday_parent"></div>
-
+        
         <script type="text/javascript">
         var xmlhttp5 = new XMLHttpRequest();
         var birth_text = "";
-
+        
         xmlhttp5.onreadystatechange = function() {
           if (xmlhttp5.readyState == 4) {
             if (xmlhttp5.status == 200) {
@@ -313,45 +364,45 @@
             }
           }
         }
-
+        
         xmlhttp5.open("GET", "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpVZ_6TTbmr47W9dQdwDQKuWYN2OlKw1AIDgloPmSM7qbY2oCYsKM9xOtCC-NPmDMWzIIqjbw50mV0/pub?output=csv");
         xmlhttp5.send();
-
+        
         function CheckBirthday() {
           var nowDate = new Date();
           var month_now = nowDate.getMonth() + 1;
           var day_now = nowDate.getDate();
-
+          
           var tomorrowDate = new Date();
           tomorrowDate.setDate( tomorrowDate.getDate() + 1);
           var month_tomorrow = tomorrowDate.getMonth() + 1;
           var day_tomorrow = tomorrowDate.getDate();
-
+          
           var match_count = 0;
           var match_count2 = 0;
-
+          
           for (var i = 0; i < birth_text.length; i++) {
             var birth_text_1 = birth_text[i].split(",");
             var month = parseInt(birth_text_1[0]);
             var day = parseInt(birth_text_1[1]);
             if (month == month_now && day == day_now) match_count++;
           }
-
+          
           for (var i = 0; i < birth_text.length; i++) {
             var birth_text_1 = birth_text[i].split(",");
             var month = parseInt(birth_text_1[0]);
             var day = parseInt(birth_text_1[1]);
             if (month == month_tomorrow && day == day_tomorrow) match_count2++;
           }
-
+          
           if (match_count > 0) {
             var output_birthday = "";
             output_birthday = "<ons-card><div class=\"title\" id=\"Birthday\"></div>";
             if (match_count2 > 0) output_birthday += "<div class=\"content\" id=\"Birthday2\"></div>";
             output_birthday += "</ons-card>";
-
+            
             document.getElementById("Birthday_parent").innerHTML = output_birthday;
-
+            
             document.getElementById("Birthday").innerHTML = "今日誕生日を迎える人が" + match_count + "人います🎉";
             if (match_count2 > 0) document.getElementById("Birthday2").innerHTML = "明日誕生日を迎える人が" + match_count2 + "人います🎉";
           }else {
@@ -365,7 +416,7 @@
           setTimeout("CheckBirthday()", 1000);
         }
         </script>
-
+        
         <ons-card>
           <div class="title">試験まで</div>
           <div id="countdown"></div>
@@ -383,14 +434,14 @@
           main();
           </script>
         </ons-card>
-
+        
       </div>
-
-
-
+      
+      
+      
     </ons-page>
   </template>
-
+  
   <template id="settings.html">
     <ons-page>
       <ons-toolbar>
@@ -403,7 +454,7 @@
           設定
         </div>
       </ons-toolbar>
-
+      
       <ons-card>
         <div class="content">
           <ons-list>
@@ -418,7 +469,7 @@
           </ons-list>
         </div>
       </ons-card>
-
+      
       <script type="text/javascript">
       function SetDarkToggle() {
         var dark_mode_cookie;
@@ -433,7 +484,7 @@
           document.getElementById("dark_toggle").setAttribute('checked', 'true');
         }
       }
-
+      
       document.getElementById("dark_toggle").addEventListener('change', function() {
         var nowDate2 = new Date();
         var date_end;
@@ -450,11 +501,11 @@
         //ChangeTheme();
         location.reload(true);
       });
-
+      
       SetDarkToggle();
       </script>
     </ons-page>
   </template>
-
+  
 </body>
 </html>

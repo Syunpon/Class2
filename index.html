@@ -29,7 +29,7 @@
   h.appendChild(link_min);
   </script>
 
-  <!-- Global site tag (gtag.js) - Google Analytics 
+  <!-- Global site tag (gtag.js) - Google Analytics
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-127299414-1"></script>
   <script>
   window.dataLayer = window.dataLayer || [];
@@ -354,71 +354,6 @@
       <div class="content" id="main_content">
 
         <div id="Birthday_parent"></div>
-
-        <script type="text/javascript">
-        var xmlhttp5 = new XMLHttpRequest();
-        var birth_text = "";
-
-        xmlhttp5.onreadystatechange = function() {
-          if (xmlhttp5.readyState == 4) {
-            if (xmlhttp5.status == 200) {
-              birth_text = xmlhttp5.responseText.split("\n");
-              CheckBirthday();
-            }
-          }
-        }
-
-        xmlhttp5.open("GET", "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpVZ_6TTbmr47W9dQdwDQKuWYN2OlKw1AIDgloPmSM7qbY2oCYsKM9xOtCC-NPmDMWzIIqjbw50mV0/pub?output=csv");
-        xmlhttp5.send();
-
-        function CheckBirthday() {
-          var nowDate = new Date();
-          var month_now = nowDate.getMonth() + 1;
-          var day_now = nowDate.getDate();
-
-          var tomorrowDate = new Date();
-          tomorrowDate.setDate( tomorrowDate.getDate() + 1);
-          var month_tomorrow = tomorrowDate.getMonth() + 1;
-          var day_tomorrow = tomorrowDate.getDate();
-
-          var match_count = 0;
-          var match_count2 = 0;
-
-          for (var i = 0; i < birth_text.length; i++) {
-            var birth_text_1 = birth_text[i].split(",");
-            var month = parseInt(birth_text_1[0]);
-            var day = parseInt(birth_text_1[1]);
-            if (month == month_now && day == day_now) match_count++;
-          }
-
-          for (var i = 0; i < birth_text.length; i++) {
-            var birth_text_1 = birth_text[i].split(",");
-            var month = parseInt(birth_text_1[0]);
-            var day = parseInt(birth_text_1[1]);
-            if (month == month_tomorrow && day == day_tomorrow) match_count2++;
-          }
-
-          if (match_count > 0) {
-            var output_birthday = "";
-            output_birthday = "<ons-card><div class=\"title\" id=\"Birthday\"></div>";
-            if (match_count2 > 0) output_birthday += "<div class=\"content\" id=\"Birthday2\"></div>";
-            output_birthday += "</ons-card>";
-
-            document.getElementById("Birthday_parent").innerHTML = output_birthday;
-
-            document.getElementById("Birthday").innerHTML = "今日誕生日を迎える人が" + match_count + "人います🎉";
-            if (match_count2 > 0) document.getElementById("Birthday2").innerHTML = "明日誕生日を迎える人が" + match_count2 + "人います🎉";
-          }else {
-            if (match_count2 > 0) {
-              document.getElementById("Birthday_parent").innerHTML = "<ons-card><div class=\"content\" id=\"Birthday2\"></div></ons-card>";
-              document.getElementById("Birthday2").innerHTML = "明日誕生日を迎える人が" + match_count2 + "人います";
-            }else {
-              document.getElementById("Birthday_parent").innerHTML = "";
-            }
-          }
-          setTimeout("CheckBirthday()", 1000);
-        }
-        </script>
 
         <ons-card>
           <div class="title">試験まで</div>

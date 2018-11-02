@@ -173,12 +173,19 @@
                 var text2 = text_[i].split(",");
 
                 var name = text2[0];
-                document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
-                document.getElementById(name + "_parent").innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
-                document.getElementById(name).innerHTML += "<ul class=\"list\"><li class=\"list-item\"><div class=\"list-item__right\"><ons-progress-circular indeterminate></ons-progress-circular></div></li></ul>";
-                console.log("init : " + name);
+                var get_type = Number(text2[1]);
+                var url = text2[2];
+
+                if (get_type != 3) {
+                  document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
+                  document.getElementById(name + "_parent").innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
+                  document.getElementById(name).innerHTML += "<ul class=\"list\"><li class=\"list-item\"><div class=\"list-item__right\"><ons-progress-circular indeterminate></ons-progress-circular></div></li></ul>";
+                  console.log("init : " + name);
+                  init2();
+                }else {
+                  GetBirthday(url);
+                }
               }
-              init2();
             } else {
               document.getElementById("main_content").innerHTML = "取得できませんでした。";
             }
@@ -214,7 +221,76 @@
         }
       }
 
+      function CheckBirthday() {
+        var nowDate = new Date();
+        var month_now = nowDate.getMonth() + 1;
+        var day_now = nowDate.getDate();
+
+        var tomorrowDate = new Date();
+        tomorrowDate.setDate( tomorrowDate.getDate() + 1);
+        var month_tomorrow = tomorrowDate.getMonth() + 1;
+        var day_tomorrow = tomorrowDate.getDate();
+
+        var match_count = 0;
+        var match_count2 = 0;
+
+        for (var i = 0; i < birth_text.length; i++) {
+          var birth_text_1 = birth_text[i].split(",");
+          var month = parseInt(birth_text_1[0]);
+          var day = parseInt(birth_text_1[1]);
+          if (month == month_now && day == day_now) match_count++;
+        }
+
+        for (var i = 0; i < birth_text.length; i++) {
+          var birth_text_1 = birth_text[i].split(",");
+          var month = parseInt(birth_text_1[0]);
+          var day = parseInt(birth_text_1[1]);
+          if (month == month_tomorrow && day == day_tomorrow) match_count2++;
+        }
+
+        if (match_count > 0) {
+          var output_birthday = "";
+          output_birthday = "<ons-card><div class=\"title\" id=\"Birthday\"></div>";
+          if (match_count2 > 0) output_birthday += "<div class=\"content\" id=\"Birthday2\"></div>";
+          output_birthday += "</ons-card>";
+
+          document.getElementById("Birthday_parent").innerHTML = output_birthday;
+
+          document.getElementById("Birthday").innerHTML = "今日誕生日を迎える人が" + match_count + "人います🎉";
+          if (match_count2 > 0) document.getElementById("Birthday2").innerHTML = "明日誕生日を迎える人が" + match_count2 + "人います🎉";
+        }else {
+          if (match_count2 > 0) {
+            document.getElementById("Birthday_parent").innerHTML = "<ons-card><div class=\"content\" id=\"Birthday2\"></div></ons-card>";
+            document.getElementById("Birthday2").innerHTML = "明日誕生日を迎える人が" + match_count2 + "人います";
+          }else {
+            document.getElementById("Birthday_parent").innerHTML = "";
+          }
+        }
+        setTimeout("CheckBirthday()", 1000);
+      }
+
+      var xmlhttp5 = new XMLHttpRequest();
+      var birth_text = "";
+
+      function GetBirthday(url_2) {
+        xmlhttp5.onreadystatechange = function() {
+          if (xmlhttp5.readyState == 4) {
+            if (xmlhttp5.status == 200) {
+              birth_text = xmlhttp5.responseText.split("\n");
+              CheckBirthday();
+            }
+          }
+        }
+
+        xmlhttp5.open("GET", url_2);
+        xmlhttp5.send();
+      }
+
+
       init("https://docs.google.com/spreadsheets/d/e/2PACX-1vQe-RiFyp3huUW2Efp_ajX6FaGDjOuR6sk88q-SlP0FJ2_UqG8Yf9ALUlca5uHQrJ2Y7taQT2esOnIa/pub?output=csv");
+      //GetBirthday("https://docs.google.com/spreadsheets/d/e/2PACX-1vRpVZ_6TTbmr47W9dQdwDQKuWYN2OlKw1AIDgloPmSM7qbY2oCYsKM9xOtCC-NPmDMWzIIqjbw50mV0/pub?output=csv");
+
+
       </script>
 
       <div class="content" id="main_content">

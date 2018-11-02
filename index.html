@@ -175,18 +175,16 @@
 
                 var name = text2[0];
                 var get_type = Number(text2[1]);
-                var url = text2[2];
+                //var url = text2[2];
 
                 if (get_type != 3) {
                   document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
                   document.getElementById(name + "_parent").innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
                   document.getElementById(name).innerHTML += "<ul class=\"list\"><li class=\"list-item\"><div class=\"list-item__right\"><ons-progress-circular indeterminate></ons-progress-circular></div></li></ul>";
                   console.log("init : " + name);
-                  init2();
-                }else {
-                  GetBirthday(url);
                 }
               }
+              init2();
             } else {
               document.getElementById("main_content").innerHTML = "取得できませんでした。";
             }
@@ -206,7 +204,12 @@
           var get_type = Number(text2[1]);
           var url = text2[2];
           console.log("name=" + name + "; url=" + url + "; get_type=" + get_type);
-          getData(name, url, get_type);
+          
+          if (get_type != 3) {
+            getData(name, url, get_type);
+          }else {
+            GetBirthday(url);
+          }
         }
       }
 

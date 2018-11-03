@@ -29,7 +29,7 @@ h.appendChild(link);
 h.appendChild(link_min);
 
 function GetCookie(cookie_name) {
-  var r = document.cookie.split(";");
+  var r = RemoveSpace(document.cookie).split(";");
   var result = "";
 
   r.forEach(function(value) {
@@ -40,6 +40,18 @@ function GetCookie(cookie_name) {
   });
   console.log("" + cookie_name+"="+result);
   return result;
+}
+
+function RemoveSpace(str) {
+  if (str !== undefined){
+    var result = str.replace(' ', "");
+    //「str」と「result」が同じ文字列になるまで繰り返す
+    while(result !== str) {
+      str = str.replace(' ', '');
+      result = result.replace(' ', "");
+    }
+    return result;
+  }
 }
 
 function SetCookie(name, value) {
@@ -258,6 +270,7 @@ gtag('config', 'UA-127299414-1');
               class_data = xmlhttp_.responseText;
               console.log(xmlhttp_.responseText);
               SetCookie("class_data", ReplaceNL(ReplaceEqual(class_data)));
+              console.log(GetCookie("class_data"));
             } else {
               document.getElementById("main_content").innerHTML = "取得できませんでした。";
             }

@@ -243,19 +243,19 @@ gtag('config', 'UA-127299414-1');
 
 
         //if (class_status == 0) {
-        /*var xmlhttp_ = new XMLHttpRequest();
+        var xmlhttp_ = new XMLHttpRequest();
         xmlhttp_.onreadystatechange = function() {
-        if (xmlhttp_.readyState == 4) {
-        if (xmlhttp_.status == 200) {*/
-        class_data = GetXmlHttp(url_);
-        SetCookie("class_data", class_data);
-        /*} else {
-        document.getElementById("main_content").innerHTML = "取得できませんでした。";
-      }
-    }
-  }
-  xmlhttp_.open("GET", url_);
-  xmlhttp_.send();/*/
+          if (xmlhttp_.readyState == 4) {
+            if (xmlhttp_.status == 200) {
+              class_data = xmlhttp_.responseText;
+              SetCookie("class_data", class_data);
+            } else {
+              document.getElementById("main_content").innerHTML = "取得できませんでした。";
+            }
+          }
+        }
+        xmlhttp_.open("GET", url_);
+        xmlhttp_.send();/
   //}
 }
 

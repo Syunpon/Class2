@@ -181,11 +181,11 @@ gtag('config', 'UA-127299414-1');
             xmlhttp_.send();
 
           }else {
-            getclass_data(class_url);
           }
+        }else {
+          init();
         }
 
-        init();
       }
 
       function getData(name, url, get_type) {
@@ -271,6 +271,8 @@ gtag('config', 'UA-127299414-1');
               console.log(xmlhttp_.responseText);
               SetCookie("class_data", ReplaceNL(ReplaceEqual(class_data)));
               console.log(GetCookie("class_data"));
+
+              init();
             } else {
               document.getElementById("main_content").innerHTML = "取得できませんでした。";
             }
@@ -278,162 +280,162 @@ gtag('config', 'UA-127299414-1');
         }
         xmlhttp_.open("GET", url_);
         xmlhttp_.send();
-  //}
-}
+        //}
+      }
 
-function init() {
-  document.getElementById("class_displayname").innerHTML = class_displayname;
+      function init() {
+        document.getElementById("class_displayname").innerHTML = class_displayname;
 
-  console.table(class_data);
+        console.table(class_data);
 
-  for (var i = 0; i < class_data.split("\n").length; i++) {
-    var text2 = class_data.split("\n")[i].split(",");
+        for (var i = 0; i < class_data.split("\n").length; i++) {
+          var text2 = class_data.split("\n")[i].split(",");
 
-    var name = text2[0];
-    var get_type = Number(text2[1]);
-    //var url = text2[2];
+          var name = text2[0];
+          var get_type = Number(text2[1]);
+          //var url = text2[2];
 
-    if (get_type != 3) {
-      document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
-      document.getElementById(name + "_parent").innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
-      document.getElementById(name).innerHTML += "<ul class=\"list\"><li class=\"list-item\"><div class=\"list-item__right\"><ons-progress-circular indeterminate></ons-progress-circular></div></li></ul>";
-      console.log("init : " + name);
-    }
-  }
-  init2();
-}
+          if (get_type != 3) {
+            document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
+            document.getElementById(name + "_parent").innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
+            document.getElementById(name).innerHTML += "<ul class=\"list\"><li class=\"list-item\"><div class=\"list-item__right\"><ons-progress-circular indeterminate></ons-progress-circular></div></li></ul>";
+            console.log("init : " + name);
+          }
+        }
+        init2();
+      }
 
-function init2() {
-  count++;
-  //for (var i = 0; i < text.length; i++) {
-  if (count < class_data.split("\n").length) {
-    var text2 = class_data.split("\n")[count].split(",");
+      function init2() {
+        count++;
+        //for (var i = 0; i < text.length; i++) {
+        if (count < class_data.split("\n").length) {
+          var text2 = class_data.split("\n")[count].split(",");
 
-    var name = text2[0];
-    var get_type = Number(text2[1]);
-    var url = text2[2];
-    console.log("name=" + name + "; url=" + url + "; get_type=" + get_type);
+          var name = text2[0];
+          var get_type = Number(text2[1]);
+          var url = text2[2];
+          console.log("name=" + name + "; url=" + url + "; get_type=" + get_type);
 
-    if (get_type != 3) {
-      getData(name, url, get_type);
-    }else {
-      GetBirthday(url);
-    }
-  }
-}
+          if (get_type != 3) {
+            getData(name, url, get_type);
+          }else {
+            GetBirthday(url);
+          }
+        }
+      }
 
-function RemoveCR(str) {
-  if (str !== undefined){
-    var result = str.replace('\r', "");
-    //「str」と「result」が同じ文字列になるまで繰り返す
-    while(result !== str) {
-      str = str.replace('\r', '');
-      result = result.replace('\r', "");
-    }
-    return result;
-  }
-}
+      function RemoveCR(str) {
+        if (str !== undefined){
+          var result = str.replace('\r', "");
+          //「str」と「result」が同じ文字列になるまで繰り返す
+          while(result !== str) {
+            str = str.replace('\r', '');
+            result = result.replace('\r', "");
+          }
+          return result;
+        }
+      }
 
-function RemoveSpace(str) {
-  if (str !== undefined){
-    var result = str.replace(' ', "");
-    //「str」と「result」が同じ文字列になるまで繰り返す
-    while(result !== str) {
-      str = str.replace(' ', '');
-      result = result.replace(' ', "");
-    }
-    return result;
-  }
-}
+      function RemoveSpace(str) {
+        if (str !== undefined){
+          var result = str.replace(' ', "");
+          //「str」と「result」が同じ文字列になるまで繰り返す
+          while(result !== str) {
+            str = str.replace(' ', '');
+            result = result.replace(' ', "");
+          }
+          return result;
+        }
+      }
 
-function ReplaceEqual(str) {
-  if (str !== undefined){
-    var result = str.replace('=', "(Equal)");
-    //「str」と「result」が同じ文字列になるまで繰り返す
-    while(result !== str) {
-      str = str.replace('=', "(Equal)");
-      result = result.replace('=', "(Equal)");
-    }
-    return result;
-  }
-}
+      function ReplaceEqual(str) {
+        if (str !== undefined){
+          var result = str.replace('=', "(Equal)");
+          //「str」と「result」が同じ文字列になるまで繰り返す
+          while(result !== str) {
+            str = str.replace('=', "(Equal)");
+            result = result.replace('=', "(Equal)");
+          }
+          return result;
+        }
+      }
 
-function ReplaceEqual2(str) {
-  if (str !== undefined){
-    var result = str.replace("(Equal)", "=");
-    //「str」と「result」が同じ文字列になるまで繰り返す
-    while(result !== str) {
-      str = str.replace("(Equal)", "=");
-      result = result.replace("(Equal)", "=");
-    }
-    return result;
-  }
-}
+      function ReplaceEqual2(str) {
+        if (str !== undefined){
+          var result = str.replace("(Equal)", "=");
+          //「str」と「result」が同じ文字列になるまで繰り返す
+          while(result !== str) {
+            str = str.replace("(Equal)", "=");
+            result = result.replace("(Equal)", "=");
+          }
+          return result;
+        }
+      }
 
-function ReplaceNL(str) {
-  if (str !== undefined){
-    var result = str.replace('\n', "(NL)");
-    //「str」と「result」が同じ文字列になるまで繰り返す
-    while(result !== str) {
-      str = str.replace('\n', "(NL)");
-      result = result.replace('\n', "(NL)");
-    }
-    return result;
-  }
-}
+      function ReplaceNL(str) {
+        if (str !== undefined){
+          var result = str.replace('\n', "(NL)");
+          //「str」と「result」が同じ文字列になるまで繰り返す
+          while(result !== str) {
+            str = str.replace('\n', "(NL)");
+            result = result.replace('\n', "(NL)");
+          }
+          return result;
+        }
+      }
 
-function ReplaceNL2(str) {
-  if (str !== undefined){
-    var result = str.replace("(NL)", "\n");
-    //「str」と「result」が同じ文字列になるまで繰り返す
-    while(result !== str) {
-      str = str.replace("(NL)", "\n");
-      result = result.replace("(NL)", "\n");
-    }
-    return result;
-  }
-}
+      function ReplaceNL2(str) {
+        if (str !== undefined){
+          var result = str.replace("(NL)", "\n");
+          //「str」と「result」が同じ文字列になるまで繰り返す
+          while(result !== str) {
+            str = str.replace("(NL)", "\n");
+            result = result.replace("(NL)", "\n");
+          }
+          return result;
+        }
+      }
 
-function GetCookie(cookie_name) {
-  var r = RemoveSpace(document.cookie).split(";");
-  var result = "";
+      function GetCookie(cookie_name) {
+        var r = RemoveSpace(document.cookie).split(";");
+        var result = "";
 
-  r.forEach(function(value) {
-    var content = value.split("=");
-    if(content[0] == cookie_name) {
-      if (content[1] !== undefined) result = content[1];
-    }
-  });
-  console.log("" + cookie_name+"="+result);
-  return result;
-}
-
-function SetCookie(name, value) {
-  document.cookie = name + "=" + value;
-}
-
-/*function GetXmlHttp(url_) {
-  var xmlhttp_ = new XMLHttpRequest();
-  var result = "";
-
-  xmlhttp_.onreadystatechange = function() {
-    if (xmlhttp_.readyState == 4) {
-      if (xmlhttp_.status == 200) {
-        result = xmlhttp_.responseText.split("\n");
-        if (result === undefined) result = "";
-        console.log(result);
-        return result;
-      } else {
-        result = "";
+        r.forEach(function(value) {
+          var content = value.split("=");
+          if(content[0] == cookie_name) {
+            if (content[1] !== undefined) result = content[1];
+          }
+        });
+        console.log("" + cookie_name+"="+result);
         return result;
       }
 
-    }
+      function SetCookie(name, value) {
+        document.cookie = name + "=" + value;
+      }
 
+      /*function GetXmlHttp(url_) {
+      var xmlhttp_ = new XMLHttpRequest();
+      var result = "";
 
+      xmlhttp_.onreadystatechange = function() {
+      if (xmlhttp_.readyState == 4) {
+      if (xmlhttp_.status == 200) {
+      result = xmlhttp_.responseText.split("\n");
+      if (result === undefined) result = "";
+      console.log(result);
+      return result;
+    } else {
+    result = "";
+    return result;
   }
-  xmlhttp_.open("GET", url_);
-  xmlhttp_.send();
+
+}
+
+
+}
+xmlhttp_.open("GET", url_);
+xmlhttp_.send();
 }*/
 
 

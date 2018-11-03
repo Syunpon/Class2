@@ -325,11 +325,13 @@
           if (xmlhttp_.readyState == 4) {
             if (xmlhttp_.status == 200) {
               result = xmlhttp_.responseText.split("\n");
+              if (result === undefined) result = "";
               return result;
             } else {
               result = "";
               return result;
             }
+
           }
 
 

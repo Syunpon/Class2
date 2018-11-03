@@ -6,14 +6,14 @@
   var d = document;
   var link = d.createElement('link');
   var link_min = d.createElement('link');
-  var dark_mode_cookie;
-  var r = document.cookie.split(";");
+  var dark_mode_cookie = GetCookie("dark_mode");
+  /*var r = document.cookie.split(";");
   r.forEach(function(value) {
     var content = value.split("=");
     if(content[0] == "dark_mode") {
       dark_mode_cookie = content[1];
     }
-  });
+  });*/
   var href = "https://unpkg.com/onsenui/css/";
   if (dark_mode_cookie == "true") {
     href += "dark-";

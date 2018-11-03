@@ -282,8 +282,8 @@ function init() {
 function init2() {
   count++;
   //for (var i = 0; i < text.length; i++) {
-  if (count < text_.length) {
-    var text2 = text_[count].split(",");
+  if (count < class_data.split("\n").length) {
+    var text2 = class_data.split("\n")[count].split(",");
 
     var name = text2[0];
     var get_type = Number(text2[1]);

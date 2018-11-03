@@ -141,7 +141,7 @@ gtag('config', 'UA-127299414-1');
         class_data = unescape(GetCookie("class_data"));
         console.log("data="+class_data);
 
-        class_id_cookie = "0";
+        //class_id_cookie = "0";
 
         if (class_url == "" || class_id_cookie == "" || class_displayname == "" || class_data == "") {
           if (class_id_cookie != "") {
@@ -181,6 +181,7 @@ gtag('config', 'UA-127299414-1');
             xmlhttp_.send();
 
           }else {
+            document.getElementById("main_content").innerHTML = "クラスコードが指定されていません。設定からクラスコードを指定してください。";
           }
         }else {
           init();
@@ -571,6 +572,19 @@ GetClassData();
         設定
       </div>
     </ons-toolbar>
+
+    <ons-card>
+      <div class="content">
+        <div style="text-align: center; margin-top: 30px;">
+          <p>
+            <ons-input id="class_code" modifier="underbar" placeholder="Number"></ons-input>
+          </p>
+          <!--<p style="margin-top: 30px;">
+            <ons-button onclick="login()"></ons-button>
+          </p>-->
+        </div>
+      </div>
+    </ons-card>
 
     <ons-card>
       <div class="content">

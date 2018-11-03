@@ -167,9 +167,11 @@ gtag('config', 'UA-127299414-1');
                       console.log("id="+class_id_cookie);
                       console.log("displayname="+class_displayname);
                       console.log("data="+class_data);
+
+
                     }
                   }
-                  if (class_url != "") {
+                  if (class_url != "=url") {
                     getclass_data(class_url);
                   }else {
                     document.getElementById("main_content").innerHTML = "正しいクラスコードを指定してください。";

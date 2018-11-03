@@ -269,8 +269,10 @@ gtag('config', 'UA-127299414-1');
             if (xmlhttp_.status == 200) {
               class_data = xmlhttp_.responseText;
               console.log(xmlhttp_.responseText);
-              SetCookie("class_data", ReplaceNL(ReplaceEqual(xmlhttp_.responseText)));
+              //SetCookie("class_data", ReplaceNL(ReplaceEqual(xmlhttp_.responseText)));
+              document.cookie = "class_data=" + ReplaceNL(ReplaceEqual(xmlhttp_.responseText));
               console.log(ReplaceNL(ReplaceEqual(xmlhttp_.responseText)));
+              console.log(GetCookie("class_data"));
 
               init();
             } else {
@@ -412,6 +414,7 @@ gtag('config', 'UA-127299414-1');
 
       function SetCookie(name, value) {
         document.cookie = "" + name + "=" + value;
+        console.log("saved as " + GetCookie(name));
       }
 
       /*function GetXmlHttp(url_) {

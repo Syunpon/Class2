@@ -93,6 +93,58 @@
       </ons-toolbar>
 
       <script type="text/javascript">
+      var class_displayname;
+      var class_status;
+      var class_url;
+      var class_data;
+
+      function GetClassData() {
+        var class_id_cookie;
+        var class_id;
+
+        class_url　＝ GetCookie("class_url");
+        class_id_cookie = GetCookie("class_id");
+        class_displayname = GetCookie("class_displayname");
+        class_data = GetCookie("class_data");
+
+        class_id_cookie = "720208";
+
+        if (class_url == "" || class_id_cookie == "" || class_displayname == "" || class_data == "") {
+          if (class_id_cookie != "") {
+            class_id = Number(class_id_cookie);
+
+            /*var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4) {
+            if (xmlhttp.status == 200) {*/
+            var text = GetXmlHttp("https://docs.google.com/spreadsheets/d/e/2PACX-1vRENc8J2soUNi617DtRGZpBJsY9KZwy_5I-kjkLwehxDqL8Q8Jb3sW9T5RdiMSpWniPI_0aUKrQBAT1/pub?output=csv");
+            for (var i = 0; i < text_.length; i++) {
+              var text2 = text_[i].split(",");
+              if (Number(text2[0]) == class_id) {
+                class_displayname = text2[2];
+                class_status = Number(text2[3]);
+                class_url = text2[4];
+
+                SetCookie("class_displayname", class_displayname);
+                SetCookie("class_url", class_url);
+
+              }
+            }
+            /*} else {
+            document.getElementById("main_content").innerHTML = "取得できませんでした。";
+          }
+        }
+      }
+      xmlhttp.open("GET", "https://docs.google.com/spreadsheets/d/e/2PACX-1vRENc8J2soUNi617DtRGZpBJsY9KZwy_5I-kjkLwehxDqL8Q8Jb3sW9T5RdiMSpWniPI_0aUKrQBAT1/pub?output=csv");
+      xmlhttp.send();*/
+          }else {
+
+          }
+        }
+        getclass_data(class_url);
+        init();
+      }
+
       function getData(name, url, get_type) {
         var xmlhttp = new XMLHttpRequest();
         var output = "";
@@ -164,38 +216,44 @@
       var count = -1;
       var text_;
 
-      function init(url_) {
+      function getclass_data(url_) {
+
+
+        //if (class_status == 0) {
+        /*var xmlhttp_ = new XMLHttpRequest();
+        xmlhttp_.onreadystatechange = function() {
+        if (xmlhttp_.readyState == 4) {
+        if (xmlhttp_.status == 200) {*/
+        class_data = GetXmlHttp(url_);
+        SetCookie("class_data", class_data);
+        /*} else {
+        document.getElementById("main_content").innerHTML = "取得できませんでした。";
+      }
+      }
+      }
+      xmlhttp_.open("GET", url_);
+      xmlhttp_.send();/*/
+      //}
+      }
+
+      function init() {
         document.getElementById("class_displayname").innerHTML = class_displayname;
 
-        if (class_status == 0) {
-          var xmlhttp_ = new XMLHttpRequest();
-          xmlhttp_.onreadystatechange = function() {
-            if (xmlhttp_.readyState == 4) {
-              if (xmlhttp_.status == 200) {
-                text_ = xmlhttp_.responseText.split("\n");
-                for (var i = 0; i < text_.length; i++) {
-                  var text2 = text_[i].split(",");
+        for (var i = 0; i < class_data.length; i++) {
+          var text2 = class_data.split("\n")[i].split(",");
 
-                  var name = text2[0];
-                  var get_type = Number(text2[1]);
-                  //var url = text2[2];
+          var name = text2[0];
+          var get_type = Number(text2[1]);
+          //var url = text2[2];
 
-                  if (get_type != 3) {
-                    document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
-                    document.getElementById(name + "_parent").innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
-                    document.getElementById(name).innerHTML += "<ul class=\"list\"><li class=\"list-item\"><div class=\"list-item__right\"><ons-progress-circular indeterminate></ons-progress-circular></div></li></ul>";
-                    console.log("init : " + name);
-                  }
-                }
-                init2();
-              } else {
-                document.getElementById("main_content").innerHTML = "取得できませんでした。";
-              }
-            }
+          if (get_type != 3) {
+            document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
+            document.getElementById(name + "_parent").innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
+            document.getElementById(name).innerHTML += "<ul class=\"list\"><li class=\"list-item\"><div class=\"list-item__right\"><ons-progress-circular indeterminate></ons-progress-circular></div></li></ul>";
+            console.log("init : " + name);
           }
-          xmlhttp_.open("GET", url_);
-          xmlhttp_.send();
         }
+        init2();
       }
 
       function init2() {
@@ -228,6 +286,45 @@
           return result;
         }
       }
+
+      function GetCookie(cookie_name) {
+        var r = document.cookie.split(";");
+        var result = "";
+
+        r.forEach(function(value) {
+          var content = value.split("=");
+          if(content[0] == cookie_name) {
+            result = content[1];
+            break;
+          }
+        });
+
+        return result;
+      }
+
+      function SetCookie(name, value) {
+        document.cookie = name + "=" + value;
+      }
+
+      function GetXmlHttp(url_) {
+        var xmlhttp_ = new XMLHttpRequest();
+        var result = "";
+
+        xmlhttp_.onreadystatechange = function() {
+          if (xmlhttp_.readyState == 4) {
+            if (xmlhttp_.status == 200) {
+              result = xmlhttp_.responseText.split("\n");
+            } else {
+              result = "";
+            }
+          }
+
+          return result;
+        }
+        xmlhttp_.open("GET", url_);
+        xmlhttp_.send();
+      }
+
 
       function CheckBirthday() {
         var nowDate = new Date();
@@ -294,54 +391,7 @@
         xmlhttp5.send();
       }
 
-      var class_displayname;
-      var class_status;
-      var class_url;
 
-      function GetClassData() {
-        var r = document.cookie.split(";");
-        var class_id_cookie;
-        var class_id;
-
-        r.forEach(function(value) {
-          var content = value.split("=");
-          if(content[0] == "class_id") {
-            dark_mode_cookie = content[1];
-          }
-        });
-
-        class_id_cookie = "720208";
-
-        if (class_id_cookie != "") {
-          class_id = Number(class_id_cookie);
-
-          var xmlhttp = new XMLHttpRequest();
-          xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == 4) {
-              if (xmlhttp.status == 200) {
-                var text = xmlhttp.responseText.split("\n");
-                for (var i = 0; i < text.length; i++) {
-                  var text2 = text[i].split(",");
-                  if (Number(text2[0]) == class_id) {
-                    class_displayname = text2[2];
-                    class_status = Number(text2[3]);
-                    class_url = text2[4];
-
-                    console.log("class_status=" + class_status);
-                    console.log("class_url=" + class_url);
-                    init(class_url);
-                    break;
-                  }
-                }
-              } else {
-                document.getElementById("main_content").innerHTML = "取得できませんでした。";
-              }
-            }
-          }
-          xmlhttp.open("GET", "https://docs.google.com/spreadsheets/d/e/2PACX-1vRENc8J2soUNi617DtRGZpBJsY9KZwy_5I-kjkLwehxDqL8Q8Jb3sW9T5RdiMSpWniPI_0aUKrQBAT1/pub?output=csv");
-          xmlhttp.send();
-        }
-      }
 
       GetClassData();
 

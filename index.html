@@ -269,8 +269,8 @@ gtag('config', 'UA-127299414-1');
             if (xmlhttp_.status == 200) {
               class_data = xmlhttp_.responseText;
               console.log(xmlhttp_.responseText);
-              SetCookie("class_data", ReplaceNL(ReplaceEqual(class_data)));
-              console.log(GetCookie("class_data"));
+              SetCookie("class_data", ReplaceNL(ReplaceEqual(xmlhttp_.responseText)));
+              console.log(ReplaceNL(ReplaceEqual(xmlhttp_.responseText)));
 
               init();
             } else {
@@ -411,7 +411,7 @@ gtag('config', 'UA-127299414-1');
       }
 
       function SetCookie(name, value) {
-        document.cookie = name + "=" + value;
+        document.cookie = "" + name + "=" + value;
       }
 
       /*function GetXmlHttp(url_) {

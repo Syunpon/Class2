@@ -126,7 +126,7 @@ gtag('config', 'UA-127299414-1');
         console.log("id="+class_id_cookie);
         class_displayname = GetCookie("class_displayname");
         console.log("displayname="+class_displayname);
-        class_data = GetCookie("class_data");
+        class_data = ReplaceEqual2(GetCookie("class_data"));
         console.log("data="+class_data);
 
         class_id_cookie = "720208";
@@ -257,7 +257,7 @@ gtag('config', 'UA-127299414-1');
             if (xmlhttp_.status == 200) {
               class_data = xmlhttp_.responseText;
               console.log(xmlhttp_.responseText);
-              SetCookie("class_data", class_data);
+              SetCookie("class_data", ReplaceEqual(class_data));
             } else {
               document.getElementById("main_content").innerHTML = "取得できませんでした。";
             }
@@ -328,6 +328,30 @@ function RemoveSpace(str) {
     while(result !== str) {
       str = str.replace(' ', '');
       result = result.replace(' ', "");
+    }
+    return result;
+  }
+}
+
+function ReplaceEqual(str) {
+  if (str !== undefined){
+    var result = str.replace('=', "(Equal)");
+    //「str」と「result」が同じ文字列になるまで繰り返す
+    while(result !== str) {
+      str = str.replace('=', "(Equal)");
+      result = result.replace('=', "(Equal)");
+    }
+    return result;
+  }
+}
+
+function ReplaceEqual2(str) {
+  if (str !== undefined){
+    var result = str.replace("(Equal)", "=");
+    //「str」と「result」が同じ文字列になるまで繰り返す
+    while(result !== str) {
+      str = str.replace("(Equal)", "=");
+      result = result.replace("(Equal)", "=");
     }
     return result;
   }

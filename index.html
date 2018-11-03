@@ -631,7 +631,7 @@ GetClassData();
 
       var class_id = Number(class_id_cookie);
       console.log(class_id);
-      document.getElementById("dark_toggle").setAttribute('value', class_id);
+      document.getElementById("class_code_input").value = class_id;
     }
 
     document.getElementById("dark_toggle").addEventListener('change', function() {

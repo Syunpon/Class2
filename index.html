@@ -271,8 +271,8 @@
             if (xmlhttp_.status == 200) {
               class_data = xmlhttp_.responseText;
               //console.log(xmlhttp_.responseText);
-              //SetCookie("class_data", ReplaceNL(ReplaceEqual(xmlhttp_.responseText)));
-              document.cookie = "class_data=" + escape(xmlhttp_.responseText);
+              SetCookie("class_data", escape(xmlhttp_.responseText));
+              //document.cookie = "class_data=" + escape(xmlhttp_.responseText);
               //console.log(ReplaceNL(ReplaceEqual(xmlhttp_.responseText)));
               //console.log(GetCookie("class_data"));
 

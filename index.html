@@ -143,7 +143,7 @@ gtag('config', 'UA-127299414-1');
 
         //class_id_cookie = "0";
 
-        if (class_url == "" || class_id_cookie == "" || class_displayname == "" || class_data == "") {
+        if (class_url == "" || class_displayname == "" || class_data == "") {
           if (class_id_cookie != "") {
             class_id = Number(class_id_cookie);
 
@@ -167,8 +167,12 @@ gtag('config', 'UA-127299414-1');
                       console.log("id="+class_id_cookie);
                       console.log("displayname="+class_displayname);
                       console.log("data="+class_data);
-                      getclass_data(class_url);
                     }
+                  }
+                  if (class_url != "") {
+                    getclass_data(class_url);
+                  }else {
+                    document.getElementById("main_content").innerHTML = "正しいクラスコードを指定してください。";
                   }
                 } else {
                 }

@@ -132,12 +132,10 @@
           if (class_id_cookie != "") {
             class_id = Number(class_id_cookie);
 
-            /*var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == 4) {
-            if (xmlhttp.status == 200) {*/
-            var text_ = GetXmlHttp("https://docs.google.com/spreadsheets/d/e/2PACX-1vRENc8J2soUNi617DtRGZpBJsY9KZwy_5I-kjkLwehxDqL8Q8Jb3sW9T5RdiMSpWniPI_0aUKrQBAT1/pub?output=csv");
-            var text = text_.split("\n");
+            var text_abc = "";
+            text_abc = GetXmlHttp("https://docs.google.com/spreadsheets/d/e/2PACX-1vRENc8J2soUNi617DtRGZpBJsY9KZwy_5I-kjkLwehxDqL8Q8Jb3sW9T5RdiMSpWniPI_0aUKrQBAT1/pub?output=csv");
+            var text = "";
+            text = text_abc.split("\n");
             for (var i = 0; i < text.length; i++) {
               var text2 = text[i].split(",");
               if (Number(text2[0]) == class_id) {
@@ -150,13 +148,6 @@
 
               }
             }
-            /*} else {
-            document.getElementById("main_content").innerHTML = "取得できませんでした。";
-          }
-        }
-      }
-      xmlhttp.open("GET", "https://docs.google.com/spreadsheets/d/e/2PACX-1vRENc8J2soUNi617DtRGZpBJsY9KZwy_5I-kjkLwehxDqL8Q8Jb3sW9T5RdiMSpWniPI_0aUKrQBAT1/pub?output=csv");
-      xmlhttp.send();*/
           }else {
 
           }
@@ -334,12 +325,14 @@
           if (xmlhttp_.readyState == 4) {
             if (xmlhttp_.status == 200) {
               result = xmlhttp_.responseText.split("\n");
+              return result;
             } else {
               result = "";
+              return result;
             }
           }
 
-          return result;
+
         }
         xmlhttp_.open("GET", url_);
         xmlhttp_.send();

@@ -194,7 +194,7 @@ gtag('config', 'UA-127299414-1');
 
         xmlhttp.onreadystatechange = function() {
           if (xmlhttp.readyState == 4) {
-            console.log(name);
+            //console.log(name);
             current_div.innerHTML = "";
 
             if (xmlhttp.status == 200) {
@@ -235,7 +235,7 @@ gtag('config', 'UA-127299414-1');
 
               output += "</ul>";
 
-              console.log(output);
+              //console.log(output);
               current_div.innerHTML = output;
               console.log("end : " + name);
               init2();
@@ -260,7 +260,7 @@ gtag('config', 'UA-127299414-1');
       var text_;
 
       function getclass_data(url_) {
-        console.log(url_);
+        //console.log(url_);
 
         //if (class_status == 0) {
         var xmlhttp_ = new XMLHttpRequest();
@@ -268,11 +268,11 @@ gtag('config', 'UA-127299414-1');
           if (xmlhttp_.readyState == 4) {
             if (xmlhttp_.status == 200) {
               class_data = xmlhttp_.responseText;
-              console.log(xmlhttp_.responseText);
+              //console.log(xmlhttp_.responseText);
               //SetCookie("class_data", ReplaceNL(ReplaceEqual(xmlhttp_.responseText)));
               document.cookie = "class_data=" + escape(xmlhttp_.responseText);
-              console.log(ReplaceNL(ReplaceEqual(xmlhttp_.responseText)));
-              console.log(GetCookie("class_data"));
+              //console.log(ReplaceNL(ReplaceEqual(xmlhttp_.responseText)));
+              //console.log(GetCookie("class_data"));
 
               init();
             } else {
@@ -288,7 +288,7 @@ gtag('config', 'UA-127299414-1');
       function init() {
         document.getElementById("class_displayname").innerHTML = class_displayname;
 
-        console.table(class_data);
+        //console.table(class_data);
 
         for (var i = 0; i < class_data.split("\n").length; i++) {
           var text2 = class_data.split("\n")[i].split(",");
@@ -408,13 +408,26 @@ gtag('config', 'UA-127299414-1');
             if (content[1] !== undefined) result = content[1];
           }
         });
-        console.log("" + cookie_name+"="+result);
+        //console.log("" + cookie_name+"="+result);
         return result;
       }
 
       function SetCookie(name, value) {
-        document.cookie = "" + name + "=" + value;
-        console.log("saved as " + GetCookie(name));
+        var nowDate2 = new Date();
+        var date_end;
+        if (nowDate2.getMonth() <= 2) {
+          date_end = new Date(nowDate2.getFullYear(), 2, 31, 0, 0);
+        }else {
+          date_end = new Date(nowDate2.getFullYear() + 1, 2, 31, 0, 0);
+        }
+        document.cookie = "" + name + "=" + value + "; expires=" + date_end.toGMTString();
+
+        console.log("Cookie［" + name + "］ was saved as " + GetCookie(name));
+      }
+
+      function DeleteCookie(name) {
+        document.cookie = "" + name + "=; max-age=0";
+        console.log("Cookie［" + name + "］ was deleted.");
       }
 
       /*function GetXmlHttp(url_) {

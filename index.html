@@ -277,6 +277,7 @@ gtag('config', 'UA-127299414-1');
 
               init();
             } else {
+              console.log("failed");
               document.getElementById("main_content").innerHTML = "取得できませんでした。";
             }
           }
@@ -579,7 +580,7 @@ GetClassData();
 
         <div style="text-align: center; margin-top: 30px;">
           <p>
-            <ons-input id="class_code_input" modifier="underbar" placeholder="Number"></ons-input>
+            <ons-input id="class_code_input" modifier="underbar" placeholder="number" float></ons-input>
           </p>
           <p style="margin-top: 30px;">
             <ons-button onclick="save_class_code()">保存</ons-button>

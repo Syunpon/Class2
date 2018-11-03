@@ -294,7 +294,7 @@
         r.forEach(function(value) {
           var content = value.split("=");
           if(content[0] == cookie_name) {
-            result = content[1];
+            if (content[1] !== undefined) result = content[1];
           }
         });
 

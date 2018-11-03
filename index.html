@@ -327,6 +327,7 @@
             if (xmlhttp_.status == 200) {
               result = xmlhttp_.responseText.split("\n");
               if (result === undefined) result = "";
+              console.log(result);
               return result;
             } else {
               result = "";

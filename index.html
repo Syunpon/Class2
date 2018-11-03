@@ -27,6 +27,25 @@
   var h = d.getElementsByTagName('head')[0];
   h.appendChild(link);
   h.appendChild(link_min);
+
+  function GetCookie(cookie_name) {
+    var r = document.cookie.split(";");
+    var result = "";
+
+    r.forEach(function(value) {
+      var content = value.split("=");
+      if(content[0] == cookie_name) {
+        if (content[1] !== undefined) result = content[1];
+      }
+    });
+    console.log("a");
+    console.log("" + cookie_name+"="+result);
+    return result;
+  }
+
+  function SetCookie(name, value) {
+    document.cookie = name + "=" + value;
+  }
   </script>
 
   <!-- Global site tag (gtag.js) - Google Analytics

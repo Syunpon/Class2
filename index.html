@@ -136,9 +136,9 @@
             xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4) {
             if (xmlhttp.status == 200) {*/
-            var text = GetXmlHttp("https://docs.google.com/spreadsheets/d/e/2PACX-1vRENc8J2soUNi617DtRGZpBJsY9KZwy_5I-kjkLwehxDqL8Q8Jb3sW9T5RdiMSpWniPI_0aUKrQBAT1/pub?output=csv").split("\n");
+            var text = GetXmlHttp("https://docs.google.com/spreadsheets/d/e/2PACX-1vRENc8J2soUNi617DtRGZpBJsY9KZwy_5I-kjkLwehxDqL8Q8Jb3sW9T5RdiMSpWniPI_0aUKrQBAT1/pub?output=csv");
             for (var i = 0; i < text.length; i++) {
-              var text2 = text[i].split(",");
+              var text2 = text.split("\n")[i].split(",");
               if (Number(text2[0]) == class_id) {
                 class_displayname = text2[2];
                 class_status = Number(text2[3]);

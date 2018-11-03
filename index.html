@@ -575,13 +575,15 @@ GetClassData();
 
     <ons-card>
       <div class="content">
+        <ons-list-header>クラスコード</ons-list-header>
+
         <div style="text-align: center; margin-top: 30px;">
           <p>
-            <ons-input id="class_code" modifier="underbar" placeholder="Number"></ons-input>
+            <ons-input id="class_code_input" modifier="underbar" placeholder="Number"></ons-input>
           </p>
-          <!--<p style="margin-top: 30px;">
-            <ons-button onclick="login()"></ons-button>
-          </p>-->
+          <p style="margin-top: 30px;">
+            <ons-button onclick="save_class_code()">保存</ons-button>
+          </p>
         </div>
       </div>
     </ons-card>
@@ -632,6 +634,26 @@ GetClassData();
       //ChangeTheme();
       location.reload(true);
     });
+
+    var save_class_code = function() {
+      var class_code = document.getElementById('class_code_input').value;
+
+      var nowDate2 = new Date();
+      var date_end;
+      if (nowDate2.getMonth() <= 2) {
+        date_end = new Date(nowDate2.getFullYear(), 2, 31, 0, 0);
+      }else {
+        date_end = new Date(nowDate2.getFullYear() + 1, 2, 31, 0, 0);
+      }
+
+      document.cookie = "class_url=";
+      document.cookie = "class_displayname=";
+      document.cookie = "class_data=";
+
+      document.cookie = "class_id=" + class_code + ";expires=" + date_end.toGMTString();
+
+      location.reload(true);
+    };
 
     SetDarkToggle();
     </script>

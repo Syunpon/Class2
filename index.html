@@ -138,7 +138,7 @@ gtag('config', 'UA-127299414-1');
         console.log("id="+class_id_cookie);
         class_displayname = GetCookie("class_displayname");
         console.log("displayname="+class_displayname);
-        class_data = ReplaceNL2(ReplaceEqual2(GetCookie("class_data")));
+        class_data = unescape(GetCookie("class_data"));
         console.log("data="+class_data);
 
         class_id_cookie = "720208";
@@ -270,7 +270,7 @@ gtag('config', 'UA-127299414-1');
               class_data = xmlhttp_.responseText;
               console.log(xmlhttp_.responseText);
               //SetCookie("class_data", ReplaceNL(ReplaceEqual(xmlhttp_.responseText)));
-              document.cookie = "class_data=" + ReplaceNL(ReplaceEqual(xmlhttp_.responseText));
+              document.cookie = "class_data=" + escape(xmlhttp_.responseText);
               console.log(ReplaceNL(ReplaceEqual(xmlhttp_.responseText)));
               console.log(GetCookie("class_data"));
 

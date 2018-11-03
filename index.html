@@ -606,7 +606,7 @@ GetClassData();
     <script type="text/javascript">
     function SetDarkToggle() {
       var dark_mode_cookie;
-      var r = document.cookie.split(";");
+      var r = RemoveSpace(document.cookie).split(";");
       r.forEach(function(value) {
         var content = value.split("=");
         if(content[0] == "dark_mode") {
@@ -616,6 +616,20 @@ GetClassData();
       if (dark_mode_cookie == "true") {
         document.getElementById("dark_toggle").setAttribute('checked', 'true');
       }
+    }
+
+    function SetClassCodeInput() {
+      var class_id_cookie;
+      var r = RemoveSpace(document.cookie).split(";");
+      r.forEach(function(value) {
+        var content = value.split("=");
+        if(content[0] == "class_id") {
+          class_id_cookie = content[1];
+        }
+      });
+
+      var class_id = Number(class_id_cookie);
+      document.getElementById("dark_toggle").setAttribute('value', class_id);
     }
 
     document.getElementById("dark_toggle").addEventListener('change', function() {
@@ -655,7 +669,20 @@ GetClassData();
       location.reload(true);
     };
 
+    function RemoveSpace(str) {
+      if (str !== undefined){
+        var result = str.replace(' ', "");
+        //「str」と「result」が同じ文字列になるまで繰り返す
+        while(result !== str) {
+          str = str.replace(' ', '');
+          result = result.replace(' ', "");
+        }
+        return result;
+      }
+    }
+
     SetDarkToggle();
+    SetClassCodeInput();
     </script>
   </ons-page>
 </template>

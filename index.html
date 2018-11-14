@@ -201,7 +201,7 @@
             current_div.innerHTML = "";
 
             if (xmlhttp.status == 200) {
-              text = RemoveCR(xmlhttp.responseText).split("\n");
+              text = RemoveQ(RemoveCR(xmlhttp.responseText)).split("\n");
               //console.log(text);
 
               output = "<ul class=\"list\">";
@@ -327,6 +327,18 @@
           }else {
             GetBirthday(url);
           }
+        }
+      }
+        
+       function RemoveQ(str) {
+        if (str !== undefined){
+          var result = str.replace('\"', "");
+          //「str」と「result」が同じ文字列になるまで繰り返す
+          while(result !== str) {
+            str = str.replace('\"', '');
+            result = result.replace('\"', "");
+          }
+          return result;
         }
       }
 

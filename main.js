@@ -126,13 +126,13 @@ function init() {
 
 var xmlhttp = new Array();
 var output = new Array();
-var name = new Array();
+var data_name = new Array();
 var text = new Array();
 
 function getData(name, url, get_type) {
   xmlhttp.push(new XMLHttpRequest());
   output.push("");
-  name.push("");
+  data_name.push(name);
   text.push("");
 
   xmlhttp[count].onreadystatechange = function() {
@@ -179,10 +179,10 @@ function getData(name, url, get_type) {
         output[count] += "</ul>";
 
         //console.log(output);
-        document.getElementById(name).innerHTML = output[count];
-        console.log("end : " + name[count]);
+        document.getElementById(data_name[count]).innerHTML = output[count];
+        console.log("end : " + data_name[count]);
       } else {
-        document.getElementById(name + "_parent").innerHTML = "取得できませんでした。";
+        document.getElementById(data_name[count] + "_parent").innerHTML = "取得できませんでした。";
       }
     }
   }

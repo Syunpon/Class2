@@ -109,7 +109,7 @@ function init() {
 
     var name = text2[0];
     var get_type = Number(text2[1]);
-    //var url = text2[2];
+    var url = text2[2];
 
     if (get_type != 3) {
       document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";

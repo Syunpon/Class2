@@ -1,13 +1,13 @@
+var class_displayname;
+var class_status;
+var class_url;
+var class_data;
+var class_id_cookie;
+var class_id;
+
+var count;
+
 function GetClassData() {
-  var class_displayname;
-  var class_status;
-  var class_url;
-  var class_data;
-  var class_id_cookie;
-  var class_id;
-
-  var init_count;
-
   class_url = GetCookie("class_url") + "=csv";
   console.log("url="+class_url);
   class_id_cookie = GetCookie("class_id");
@@ -189,6 +189,7 @@ function getData(name, url, get_type) {
 
   xmlhttp[count].open("GET", url);
   xmlhttp[count].send();
+  count++;
 }
 
 function RemoveCR(str) {

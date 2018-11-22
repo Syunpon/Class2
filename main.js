@@ -130,7 +130,7 @@ var name = new Array();
 var text = new Array();
 
 function getData(name, url, get_type) {
-  xmlhttp.push(XMLHttpRequest());
+  xmlhttp.push(new XMLHttpRequest());
   output.push("");
   name.push("");
   text.push("");

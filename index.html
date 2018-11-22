@@ -117,242 +117,146 @@
         <div class="center" id="class_displayname"></div>
       </ons-toolbar>
 
-      <script type="text/javascript">
-      var class_displayname;
-      var class_status;
-      var class_url;
-      var class_data;
+      <script src="main.js"></script>
 
-      function GetClassData() {
-        var class_id_cookie;
-        var class_id;
-
-        class_url = GetCookie("class_url") + "=csv";
-        console.log("url="+class_url);
-        class_id_cookie = GetCookie("class_id");
-        console.log("id="+class_id_cookie);
-        class_displayname = GetCookie("class_displayname");
-        console.log("displayname="+class_displayname);
-        class_data = unescape(GetCookie("class_data"));
-        console.log("data="+class_data);
-
-        //class_id_cookie = "0";
-
-        if (class_url == "" || class_displayname == "" || class_data == "") {
-          if (class_id_cookie != "") {
-            class_id = Number(class_id_cookie);
-
-            var xmlhttp_ = new XMLHttpRequest();
-
-            xmlhttp_.onreadystatechange = function() {
-              if (xmlhttp_.readyState == 4) {
-                if (xmlhttp_.status == 200) {
-                  text = xmlhttp_.responseText.split("\n");
-                  for (var i = 0; i < text.length; i++) {
-                    var text2 = text[i].split(",");
-                    if (Number(text2[0]) == class_id) {
-                      class_displayname = text2[2];
-                      class_status = Number(text2[3]);
-                      class_url = text2[4];
-
-                      SetCookie("class_displayname", class_displayname);
-                      SetCookie("class_url", class_url);
-
-                      console.log("url="+class_url);
-                      console.log("id="+class_id_cookie);
-                      console.log("displayname="+class_displayname);
-                      console.log("data="+class_data);
-
-
-                    }
-                  }
-                  console.log(class_url);
-                  if (class_url != "=csv") {
-                    getclass_data(class_url);
-                  }else {
-                    document.getElementById("main_content").innerHTML = "正しいクラスコードを指定してください。";
-                  }
-                } else {
-                }
-
-              }
-
-
-            }
-            xmlhttp_.open("GET", "https://docs.google.com/spreadsheets/d/e/2PACX-1vRENc8J2soUNi617DtRGZpBJsY9KZwy_5I-kjkLwehxDqL8Q8Jb3sW9T5RdiMSpWniPI_0aUKrQBAT1/pub?output=csv");
-            xmlhttp_.send();
-
-          }else {
-            document.getElementById("main_content").innerHTML = "クラスコードが指定されていません。設定からクラスコードを指定してください。";
-          }
-        }else {
-          init();
-        }
-
-      }
-
-      function getData(name, url, get_type) {
-        var xmlhttp = new XMLHttpRequest();
-        var output = "";
-
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState == 4) {
-            //console.log(name);
-            current_div.innerHTML = "";
-
-            if (xmlhttp.status == 200) {
-              text = RemoveQ(RemoveCR(xmlhttp.responseText)).split("\n");
-              //console.log(text);
-
-              output = "<ul class=\"list\">";
-
-              for (var i = 0; i < text.length; i++) {
-                var text2 = text[i].split(",");
-
-                switch (get_type) {
-                  case 0: //小テスト範囲
-                  output += "<li class=\"list-item\"><div class=\"list-item__center\">" + text2[0] + "</div><div class=\"list-item__right\"><div class=\"list-item__label\">" + text2[1] + "</div></div></li>";
-                  break;
-
-                  case 1: //英語
-                  var label1;
-                  var label2;
-
-                  if (i > 0) {
-                    output += "<ons-list-item expandable>" + text2[0] + "<div class=\"expandable-content\">" + label1 + " : " + text2[1] + "<br>" + label2 + " : " + text2[2] + "</div></ons-list-item>";
-                  }else {
-                    label1 = text2[1];
-                    label2 = text2[2];
-                  }
-                  break;
-
-                  case 2: //イベント
-                  output += "<ons-list-item";
-                  if (text2[1] != "") output += " expandable";
-                  output += ">" +text2[0];
-                  if (text2[1] != "") output += "<div class=\"expandable-content\">" + text2[1] + "</div>";
-                  output += "</ons-list-item>";
-                  break;
-                }
-              }
-
-              output += "</ul>";
-
-              //console.log(output);
-              current_div.innerHTML = output;
-              console.log("end : " + name);
-              init2();
-            } else {
-              current_div_parent.innerHTML = "取得できませんでした。";
-              init2();
-            }
-          }
-        }
-
-        //document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
-        var current_div_parent = document.getElementById(name + "_parent");
-        //current_div_parent.innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
-        var current_div = document.getElementById(name);
-        //current_div.innerHTML += "<ul class=\"list\"><li class=\"list-item\"><div class=\"list-item__right\"><ons-progress-circular indeterminate></ons-progress-circular></div></li></ul>";
-        console.log("init : " + name);
-        xmlhttp.open("GET", url);
-        xmlhttp.send();
-      }
-
-      var count = -1;
-      var text_;
-
-      function getclass_data(url_) {
-        //console.log(url_);
-
-        //if (class_status == 0) {
-        var xmlhttp_ = new XMLHttpRequest();
-        xmlhttp_.onreadystatechange = function() {
-          if (xmlhttp_.readyState == 4) {
-            if (xmlhttp_.status == 200) {
-              class_data = xmlhttp_.responseText;
-              //console.log(xmlhttp_.responseText);
-              SetCookie("class_data", escape(xmlhttp_.responseText));
-              //document.cookie = "class_data=" + escape(xmlhttp_.responseText);
-              //console.log(ReplaceNL(ReplaceEqual(xmlhttp_.responseText)));
-              //console.log(GetCookie("class_data"));
-
-              init();
-            } else {
-              console.log("failed");
-              document.getElementById("main_content").innerHTML = "取得できませんでした。";
-            }
-          }
-        }
-        xmlhttp_.open("GET", url_);
-        xmlhttp_.send();
-        //}
-      }
-
-      function init() {
-        document.getElementById("class_displayname").innerHTML = class_displayname;
-
-        //console.table(class_data);
-
-        for (var i = 0; i < class_data.split("\n").length; i++) {
-          var text2 = class_data.split("\n")[i].split(",");
-
-          var name = text2[0];
-          var get_type = Number(text2[1]);
-          //var url = text2[2];
-
-          if (get_type != 3) {
-            document.getElementById("main_content").innerHTML += "<div id=\"" + name + "_parent\"></div>";
-            document.getElementById(name + "_parent").innerHTML += "<ons-card><div class=\"content\"><ons-list-header>" + name + "</ons-list-header><div id=\"" + name + "\"></div></div></ons-card>";
-            document.getElementById(name).innerHTML += "<ul class=\"list\"><li class=\"list-item\"><div class=\"list-item__right\"><ons-progress-circular indeterminate></ons-progress-circular></div></li></ul>";
-            console.log("init : " + name);
-          }
-        }
-        init2();
-      }
-
-      function init2() {
-        count++;
-        //for (var i = 0; i < text.length; i++) {
-        if (count < class_data.split("\n").length) {
-          var text2 = class_data.split("\n")[count].split(",");
-
-          var name = text2[0];
-          var get_type = Number(text2[1]);
-          var url = text2[2];
-          console.log("name=" + name + "; url=" + url + "; get_type=" + get_type);
-
-          if (get_type != 3) {
-            getData(name, url, get_type);
-          }else {
-            GetBirthday(url);
-          }
-        }
-      }
+      <div class="content" id="main_content">
         
-       function RemoveQ(str) {
-        if (str !== undefined){
-          var result = str.replace('\"', "");
-          //「str」と「result」が同じ文字列になるまで繰り返す
-          while(result !== str) {
-            str = str.replace('\"', '');
-            result = result.replace('\"', "");
+        <div id="Birthday_parent"></div>
+
+        <ons-card>
+          <div class="title">試験まで</div>
+          <div id="countdown"></div>
+          <script type="text/javascript">
+          function main() {
+            var now = new Date();
+            var test_date = new Date( 2018, 10, 19, 0, 0 );
+            var day = (test_date.getTime() - now.getTime()) / 1000 / 60 / 60 / 24;
+            var hour = (test_date.getTime() - now.getTime() - Math.floor(day) * 1000 * 60 * 60 *24) / 1000 / 60 / 60;
+            document.getElementById("countdown").innerHTML = "";
+            if (Math.floor(day) > 0) document.getElementById("countdown").innerHTML += "残り" + Math.floor(day) + "日";
+            if (Math.floor(hour) > 0) document.getElementById("countdown").innerHTML += Math.floor(hour) + "時間";
+            setTimeout("main()", 1000);
           }
-          return result;
+          main();
+          </script>
+        </ons-card>
+
+      </div>
+
+
+
+    </ons-page>
+  </template>
+
+  <template id="settings.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="md-menu"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center">
+          設定
+        </div>
+      </ons-toolbar>
+
+      <ons-card>
+        <div class="content">
+          <ons-list-header>クラスコード</ons-list-header>
+
+          <div style="text-align: center; margin-top: 30px;">
+            <p>
+              <ons-input id="class_code_input" type="number" modifier="underbar" placeholder="クラスコード" float></ons-input>
+            </p>
+            <p style="margin-top: 30px;">
+              <ons-button onclick="save_class_code()">保存</ons-button>
+            </p>
+          </div>
+        </div>
+      </ons-card>
+
+      <ons-card>
+        <div class="content">
+          <ons-list>
+            <ons-list-item>
+              <div class="center">
+                ダークモード
+              </div>
+              <div class="right">
+                <ons-switch id="dark_toggle"></ons-switch>
+              </div>
+            </ons-list-item>
+          </ons-list>
+        </div>
+      </ons-card>
+
+      <script type="text/javascript">
+      function SetDarkToggle() {
+        var dark_mode_cookie;
+        var r = RemoveSpace(document.cookie).split(";");
+        r.forEach(function(value) {
+          var content = value.split("=");
+          if(content[0] == "dark_mode") {
+            dark_mode_cookie = content[1];
+          }
+        });
+        if (dark_mode_cookie == "true") {
+          document.getElementById("dark_toggle").setAttribute('checked', 'true');
         }
       }
 
-      function RemoveCR(str) {
-        if (str !== undefined){
-          var result = str.replace('\r', "");
-          //「str」と「result」が同じ文字列になるまで繰り返す
-          while(result !== str) {
-            str = str.replace('\r', '');
-            result = result.replace('\r', "");
+      function SetClassCodeInput() {
+        var class_id_cookie;
+        var r = RemoveSpace(document.cookie).split(";");
+        r.forEach(function(value) {
+          var content = value.split("=");
+          if(content[0] == "class_id") {
+            class_id_cookie = content[1];
           }
-          return result;
-        }
+        });
+
+        var class_id = Number(class_id_cookie);
+        console.log(class_id);
+        document.getElementById("class_code_input").value = class_id;
       }
+
+      document.getElementById("dark_toggle").addEventListener('change', function() {
+        var nowDate2 = new Date();
+        var date_end;
+        if (nowDate2.getMonth() <= 2) {
+          date_end = new Date(nowDate2.getFullYear(), 2, 31, 0, 0);
+        }else {
+          date_end = new Date(nowDate2.getFullYear() + 1, 2, 31, 0, 0);
+        }
+        if (document.getElementById("dark_toggle").checked) {
+          document.cookie = "dark_mode=true;expires=" + date_end.toGMTString();
+        }else {
+          document.cookie = "dark_mode=false;expires=" + date_end.toGMTString();
+        }
+        //ChangeTheme();
+        location.reload(true);
+      });
+
+      var save_class_code = function() {
+        var class_code = document.getElementById('class_code_input').value;
+
+        var nowDate2 = new Date();
+        var date_end;
+        if (nowDate2.getMonth() <= 2) {
+          date_end = new Date(nowDate2.getFullYear(), 2, 31, 0, 0);
+        }else {
+          date_end = new Date(nowDate2.getFullYear() + 1, 2, 31, 0, 0);
+        }
+
+        document.cookie = "class_url=";
+        document.cookie = "class_displayname=";
+        document.cookie = "class_data=";
+
+        document.cookie = "class_id=" + class_code + ";expires=" + date_end.toGMTString();
+
+        location.reload(true);
+      };
 
       function RemoveSpace(str) {
         if (str !== undefined){
@@ -366,342 +270,11 @@
         }
       }
 
-      function ReplaceEqual(str) {
-        if (str !== undefined){
-          var result = str.replace('=', "(Equal)");
-          //「str」と「result」が同じ文字列になるまで繰り返す
-          while(result !== str) {
-            str = str.replace('=', "(Equal)");
-            result = result.replace('=', "(Equal)");
-          }
-          return result;
-        }
-      }
-
-      function ReplaceEqual2(str) {
-        if (str !== undefined){
-          var result = str.replace("(Equal)", "=");
-          //「str」と「result」が同じ文字列になるまで繰り返す
-          while(result !== str) {
-            str = str.replace("(Equal)", "=");
-            result = result.replace("(Equal)", "=");
-          }
-          return result;
-        }
-      }
-
-      function ReplaceNL(str) {
-        if (str !== undefined){
-          var result = str.replace('\n', "(NL)");
-          //「str」と「result」が同じ文字列になるまで繰り返す
-          while(result !== str) {
-            str = str.replace('\n', "(NL)");
-            result = result.replace('\n', "(NL)");
-          }
-          return result;
-        }
-      }
-
-      function ReplaceNL2(str) {
-        if (str !== undefined){
-          var result = str.replace("(NL)", "\n");
-          //「str」と「result」が同じ文字列になるまで繰り返す
-          while(result !== str) {
-            str = str.replace("(NL)", "\n");
-            result = result.replace("(NL)", "\n");
-          }
-          return result;
-        }
-      }
-
-      function GetCookie(cookie_name) {
-        var r = RemoveSpace(document.cookie).split(";");
-        var result = "";
-
-        r.forEach(function(value) {
-          var content = value.split("=");
-          if(content[0] == cookie_name) {
-            if (content[1] !== undefined) result = content[1];
-          }
-        });
-        //console.log("" + cookie_name+"="+result);
-        return result;
-      }
-
-      function SetCookie(name, value) {
-        var nowDate2 = new Date();
-        var date_end;
-        if (nowDate2.getMonth() <= 2) {
-          date_end = new Date(nowDate2.getFullYear(), 2, 31, 0, 0);
-        }else {
-          date_end = new Date(nowDate2.getFullYear() + 1, 2, 31, 0, 0);
-        }
-        document.cookie = "" + name + "=" + value + "; expires=" + date_end.toGMTString();
-
-        console.log("Cookie［" + name + "］ was saved as " + GetCookie(name));
-      }
-
-      function DeleteCookie(name) {
-        document.cookie = "" + name + "=; max-age=0";
-        console.log("Cookie［" + name + "］ was deleted.");
-      }
-
-      /*function GetXmlHttp(url_) {
-      var xmlhttp_ = new XMLHttpRequest();
-      var result = "";
-
-      xmlhttp_.onreadystatechange = function() {
-      if (xmlhttp_.readyState == 4) {
-      if (xmlhttp_.status == 200) {
-      result = xmlhttp_.responseText.split("\n");
-      if (result === undefined) result = "";
-      console.log(result);
-      return result;
-    } else {
-    result = "";
-    return result;
-  }
-
-}
-
-
-}
-xmlhttp_.open("GET", url_);
-xmlhttp_.send();
-}*/
-
-
-function CheckBirthday() {
-  var nowDate = new Date();
-  var month_now = nowDate.getMonth() + 1;
-  var day_now = nowDate.getDate();
-
-  var tomorrowDate = new Date();
-  tomorrowDate.setDate( tomorrowDate.getDate() + 1);
-  var month_tomorrow = tomorrowDate.getMonth() + 1;
-  var day_tomorrow = tomorrowDate.getDate();
-
-  var match_count = 0;
-  var match_count2 = 0;
-
-  for (var i = 0; i < birth_text.length; i++) {
-    var birth_text_1 = birth_text[i].split(",");
-    var month = parseInt(birth_text_1[0]);
-    var day = parseInt(birth_text_1[1]);
-    if (month == month_now && day == day_now) match_count++;
-  }
-
-  for (var i = 0; i < birth_text.length; i++) {
-    var birth_text_1 = birth_text[i].split(",");
-    var month = parseInt(birth_text_1[0]);
-    var day = parseInt(birth_text_1[1]);
-    if (month == month_tomorrow && day == day_tomorrow) match_count2++;
-  }
-
-  if (match_count > 0) {
-    var output_birthday = "";
-    output_birthday = "<ons-card><div class=\"title\" id=\"Birthday\"></div>";
-    if (match_count2 > 0) output_birthday += "<div class=\"content\" id=\"Birthday2\"></div>";
-    output_birthday += "</ons-card>";
-
-    document.getElementById("Birthday_parent").innerHTML = output_birthday;
-
-    document.getElementById("Birthday").innerHTML = "今日誕生日を迎える人が" + match_count + "人います🎉";
-    if (match_count2 > 0) document.getElementById("Birthday2").innerHTML = "明日誕生日を迎える人が" + match_count2 + "人います🎉";
-  }else {
-    if (match_count2 > 0) {
-      document.getElementById("Birthday_parent").innerHTML = "<ons-card><div class=\"content\" id=\"Birthday2\"></div></ons-card>";
-      document.getElementById("Birthday2").innerHTML = "明日誕生日を迎える人が" + match_count2 + "人います";
-    }else {
-      document.getElementById("Birthday_parent").innerHTML = "";
-    }
-  }
-  setTimeout("CheckBirthday()", 1000);
-}
-
-var xmlhttp5 = new XMLHttpRequest();
-var birth_text = "";
-
-function GetBirthday(url_2) {
-  xmlhttp5.onreadystatechange = function() {
-    if (xmlhttp5.readyState == 4) {
-      if (xmlhttp5.status == 200) {
-        birth_text = xmlhttp5.responseText.split("\n");
-        CheckBirthday();
-      }
-    }
-  }
-
-  xmlhttp5.open("GET", url_2);
-  xmlhttp5.send();
-}
-
-
-
-GetClassData();
-
-//init("https://docs.google.com/spreadsheets/d/e/2PACX-1vQe-RiFyp3huUW2Efp_ajX6FaGDjOuR6sk88q-SlP0FJ2_UqG8Yf9ALUlca5uHQrJ2Y7taQT2esOnIa/pub?output=csv");
-//GetBirthday("https://docs.google.com/spreadsheets/d/e/2PACX-1vRpVZ_6TTbmr47W9dQdwDQKuWYN2OlKw1AIDgloPmSM7qbY2oCYsKM9xOtCC-NPmDMWzIIqjbw50mV0/pub?output=csv");
-
-
-</script>
-
-<div class="content" id="main_content">
-
-  <div id="Birthday_parent"></div>
-
-  <ons-card>
-    <div class="title">試験まで</div>
-    <div id="countdown"></div>
-    <script type="text/javascript">
-    function main() {
-      var now = new Date();
-      var test_date = new Date( 2018, 10, 19, 0, 0 );
-      var day = (test_date.getTime() - now.getTime()) / 1000 / 60 / 60 / 24;
-      var hour = (test_date.getTime() - now.getTime() - Math.floor(day) * 1000 * 60 * 60 *24) / 1000 / 60 / 60;
-      document.getElementById("countdown").innerHTML = "";
-      if (Math.floor(day) > 0) document.getElementById("countdown").innerHTML += "残り" + Math.floor(day) + "日";
-      if (Math.floor(hour) > 0) document.getElementById("countdown").innerHTML += Math.floor(hour) + "時間";
-      setTimeout("main()", 1000);
-    }
-    main();
-    </script>
-  </ons-card>
-
-</div>
-
-
-
-</ons-page>
-</template>
-
-<template id="settings.html">
-  <ons-page>
-    <ons-toolbar>
-      <div class="left">
-        <ons-toolbar-button onclick="fn.open()">
-          <ons-icon icon="md-menu"></ons-icon>
-        </ons-toolbar-button>
-      </div>
-      <div class="center">
-        設定
-      </div>
-    </ons-toolbar>
-
-    <ons-card>
-      <div class="content">
-        <ons-list-header>クラスコード</ons-list-header>
-
-        <div style="text-align: center; margin-top: 30px;">
-          <p>
-            <ons-input id="class_code_input" type="number" modifier="underbar" placeholder="クラスコード" float></ons-input>
-          </p>
-          <p style="margin-top: 30px;">
-            <ons-button onclick="save_class_code()">保存</ons-button>
-          </p>
-        </div>
-      </div>
-    </ons-card>
-
-    <ons-card>
-      <div class="content">
-        <ons-list>
-          <ons-list-item>
-            <div class="center">
-              ダークモード
-            </div>
-            <div class="right">
-              <ons-switch id="dark_toggle"></ons-switch>
-            </div>
-          </ons-list-item>
-        </ons-list>
-      </div>
-    </ons-card>
-
-    <script type="text/javascript">
-    function SetDarkToggle() {
-      var dark_mode_cookie;
-      var r = RemoveSpace(document.cookie).split(";");
-      r.forEach(function(value) {
-        var content = value.split("=");
-        if(content[0] == "dark_mode") {
-          dark_mode_cookie = content[1];
-        }
-      });
-      if (dark_mode_cookie == "true") {
-        document.getElementById("dark_toggle").setAttribute('checked', 'true');
-      }
-    }
-
-    function SetClassCodeInput() {
-      var class_id_cookie;
-      var r = RemoveSpace(document.cookie).split(";");
-      r.forEach(function(value) {
-        var content = value.split("=");
-        if(content[0] == "class_id") {
-          class_id_cookie = content[1];
-        }
-      });
-
-      var class_id = Number(class_id_cookie);
-      console.log(class_id);
-      document.getElementById("class_code_input").value = class_id;
-    }
-
-    document.getElementById("dark_toggle").addEventListener('change', function() {
-      var nowDate2 = new Date();
-      var date_end;
-      if (nowDate2.getMonth() <= 2) {
-        date_end = new Date(nowDate2.getFullYear(), 2, 31, 0, 0);
-      }else {
-        date_end = new Date(nowDate2.getFullYear() + 1, 2, 31, 0, 0);
-      }
-      if (document.getElementById("dark_toggle").checked) {
-        document.cookie = "dark_mode=true;expires=" + date_end.toGMTString();
-      }else {
-        document.cookie = "dark_mode=false;expires=" + date_end.toGMTString();
-      }
-      //ChangeTheme();
-      location.reload(true);
-    });
-
-    var save_class_code = function() {
-      var class_code = document.getElementById('class_code_input').value;
-
-      var nowDate2 = new Date();
-      var date_end;
-      if (nowDate2.getMonth() <= 2) {
-        date_end = new Date(nowDate2.getFullYear(), 2, 31, 0, 0);
-      }else {
-        date_end = new Date(nowDate2.getFullYear() + 1, 2, 31, 0, 0);
-      }
-
-      document.cookie = "class_url=";
-      document.cookie = "class_displayname=";
-      document.cookie = "class_data=";
-
-      document.cookie = "class_id=" + class_code + ";expires=" + date_end.toGMTString();
-
-      location.reload(true);
-    };
-
-    function RemoveSpace(str) {
-      if (str !== undefined){
-        var result = str.replace(' ', "");
-        //「str」と「result」が同じ文字列になるまで繰り返す
-        while(result !== str) {
-          str = str.replace(' ', '');
-          result = result.replace(' ', "");
-        }
-        return result;
-      }
-    }
-
-    SetDarkToggle();
-    SetClassCodeInput();
-    </script>
-  </ons-page>
-</template>
+      SetDarkToggle();
+      SetClassCodeInput();
+      </script>
+    </ons-page>
+  </template>
 
 </body>
 </html>
